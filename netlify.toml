@@ -1,0 +1,8 @@
+# Netlify deploy config for 口碑覓食
+# 1. In Netlify: Site configuration → Environment variables → add  GOOGLE_MAPS_KEY = <your key>
+# 2. Connect this folder via Git (or "Deploy manually" won't run the build — see note below).
+# On each deploy, the build command swaps your key into the page; the source file never holds it.
+
+[build]
+  publish = "dist"
+  command = "mkdir -p dist && sed \"s|%%GOOGLE_MAPS_KEY%%|$GOOGLE_MAPS_KEY|g\" food-finder.html > dist/index.html"
