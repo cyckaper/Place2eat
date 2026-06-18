@@ -165,7 +165,8 @@
       <label id="centerLabel"></label>
       <div class="seg"><button class="ghost" id="locBtn"></button><button class="ghost" id="pinBtn"></button></div>
     </div>
-    <div class="field"><label id="goLabel"></label><input type="text" id="goInput" style="width:180px" autocomplete="off"></div>
+    <div class="field"><label id="goLabel"></label><input type="text" id="goInput" style="width:170px" autocomplete="off"></div>
+    <div class="field"><label id="nameLabel"></label><input type="text" id="nameInput" style="width:170px" autocomplete="off"></div>
     <div class="field">
       <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
       <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
@@ -224,6 +225,7 @@ const LOCALES = {
       errEmpty:'請先貼上金鑰。', errLoad:'地圖載入失敗，請確認金鑰與已啟用的 API。',
       centerLabel:'搜尋中心', myLoc:'我的位置', locating:'定位中…', pickMap:'點地圖選點',
       goLabel:'前往地點', goPh:'例如：信義區',
+      nameLabel:'店名搜尋', namePh:'例如：滇味小廚', noRating:'無評分',
       radiusLabel:'搜尋半徑', minRev:'評論數 ≥', minRat:'評分 ≥', searchBtn:'搜尋此範圍',
       venueLabel:'店家', foodLabel:'食物', sRating:'評分', sPop:'人氣', sDist:'距離',
       priceLabel:'價位', priceAny:'不限',
@@ -289,6 +291,7 @@ const LOCALES = {
       errEmpty:'Please paste a key first.', errLoad:'Map failed to load. Check the key and enabled APIs.',
       centerLabel:'Search center', myLoc:'My location', locating:'Locating…', pickMap:'Pick on map',
       goLabel:'Go to place', goPh:'e.g. Urbana, IL',
+      nameLabel:'Search by name', namePh:'e.g. Joe’s Pizza', noRating:'No rating',
       radiusLabel:'Radius', minRev:'Reviews ≥', minRat:'Rating ≥', searchBtn:'Search this area',
       venueLabel:'Place', foodLabel:'Food', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
       priceLabel:'Price', priceAny:'Any',
@@ -353,6 +356,7 @@ const LOCALES = {
       errEmpty:'先にキーを貼り付けてください。', errLoad:'地図の読み込みに失敗しました。キーと有効な API を確認してください。',
       centerLabel:'検索の中心', myLoc:'現在地', locating:'位置取得中…', pickMap:'地図で指定',
       goLabel:'場所へ移動', goPh:'例：渋谷',
+      nameLabel:'店名で検索', namePh:'例：一蘭', noRating:'評価なし',
       radiusLabel:'検索半径', minRev:'レビュー数 ≥', minRat:'評価 ≥', searchBtn:'この範囲を検索',
       venueLabel:'お店', foodLabel:'料理', sRating:'評価', sPop:'人気', sDist:'距離',
       priceLabel:'価格', priceAny:'指定なし',
@@ -409,6 +413,7 @@ let resultMarkers=[], lastResults=[];
 let sortMode=localStorage.getItem('ff_sort')||'rating';
 let selectedCat='all', selectedFood='all';
 let pinMode=false, userLocated=false;
+let mode='cat', nameQuery='';
 
 const chunk=(a,n)=>{const o=[];for(let i=0;i<a.length;i+=n)o.push(a.slice(i,i+n));return o;};
 function venueObj(){ return L.cats.find(c=>c.id===selectedCat)||L.cats[0]; }
@@ -431,6 +436,7 @@ function applyLocale(){
   $('#keyInput').placeholder=t.keyPh; $('#keyGo').textContent=t.keyGo;
   $('#centerLabel').textContent=t.centerLabel;
   $('#goLabel').textContent=t.goLabel; $('#goInput').placeholder=t.goPh;
+  $('#nameLabel').textContent=t.nameLabel; $('#nameInput').placeholder=t.namePh;
   $('#locBtn').textContent=t.myLoc; $('#pinBtn').textContent=t.pickMap;
   $('#radiusLabel').textContent=t.radiusLabel;
   $('#minRevLabel').textContent=t.minRev; $('#minRatLabel').textContent=t.minRat;
@@ -455,6 +461,7 @@ function setRegion(r){
     if(searchCircle) searchCircle.setRadius(+$('#radius').value);
     setCenter(new google.maps.LatLng(L.fallback.lat,L.fallback.lng),true);
     map.setZoom(12); userLocated=true;
+    mode='cat';
     renderChips(); showInitial(); clearMarkers();
   }
 }
@@ -512,19 +519,20 @@ async function initApp(){
   map.addListener('click', e=>{ if(pinMode){ userLocated=true; setCenter(e.latLng,true); pinMode=false; $('#pinBtn').classList.remove('on'); }});
 
   $('#radius').addEventListener('input', ()=>{ updateRadLabel(); searchCircle.setRadius(+$('#radius').value); });
-  $('#minReviews').addEventListener('input', ()=>{ updateRevLabel(); localStorage.setItem('ff_rev',$('#minReviews').value); if(lastResults.length) render(lastResults); });
-  $('#minRating').addEventListener('input', ()=>{ updateRatLabel(); localStorage.setItem('ff_rat',$('#minRating').value); if(lastResults.length) render(lastResults); });
-  $('#price').addEventListener('input', ()=>{ updatePriceLabel(); localStorage.setItem('ff_price',$('#price').value); if(lastResults.length) render(lastResults); });
+  $('#minReviews').addEventListener('input', ()=>{ updateRevLabel(); localStorage.setItem('ff_rev',$('#minReviews').value); rerender(); });
+  $('#minRating').addEventListener('input', ()=>{ updateRatLabel(); localStorage.setItem('ff_rat',$('#minRating').value); rerender(); });
+  $('#price').addEventListener('input', ()=>{ updatePriceLabel(); localStorage.setItem('ff_price',$('#price').value); rerender(); });
   $('#searchBtn').addEventListener('click', runSearch);
   $('#locBtn').addEventListener('click', useMyLocation);
   $('#pinBtn').addEventListener('click', ()=>{ pinMode=!pinMode; $('#pinBtn').classList.toggle('on',pinMode); });
   $('#goInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); goToPlace(); } });
+  $('#nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); nameSearch(); } });
   document.querySelectorAll('.sort button').forEach(b=>{
     if(b.dataset.sort===sortMode){ document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); }
     b.addEventListener('click',()=>{
       sortMode=b.dataset.sort; localStorage.setItem('ff_sort',sortMode);
       document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-      if(lastResults.length) render(lastResults);
+      if(lastResults.length) rerender();
     });
   });
   renderChips(); showInitial(); silentGeolocate();
@@ -620,6 +628,7 @@ function useMyLocation(){
 
 /* ============== search (Venue × Food cross-filter) ============== */
 async function runSearch(){
+  mode='cat';
   const radius=+$('#radius').value;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
@@ -660,21 +669,53 @@ async function runSearch(){
   lastResults=mapped; render(mapped);
 }
 
-function render(results){
-  const minRev=+$('#minReviews').value||0, minRat=+$('#minRating').value||0, pmax=+$('#price').value;
-  let list=results.filter(r=>r.p.rating>=minRat && r.p.userRatingCount>=minRev);
-  if(pmax<4) list=list.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; });
+async function nameSearch(){
+  const q=$('#nameInput').value.trim(); if(!q) return;
+  mode='name'; nameQuery=q;
+  $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
+  $('#count').textContent=L.t.searching; clearMarkers();
+  const { Place } = await google.maps.importLibrary("places");
+  const { spherical } = await google.maps.importLibrary("geometry");
+  const radius=+$('#radius').value;
+  try{
+    const { places } = await Place.searchByText({
+      textQuery:q,
+      fields:['id','displayName','location','rating','userRatingCount','formattedAddress','googleMapsURI','primaryTypeDisplayName','types','priceLevel','businessStatus','regularOpeningHours','utcOffsetMinutes'],
+      locationBias:{ center:searchCenter, radius },
+      maxResultCount:20, language:L.apiLang,
+    });
+    const mapped=(places||[]).filter(p=>p.location && p.businessStatus!=='CLOSED_PERMANENTLY')
+      .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
+    lastResults=mapped; render(mapped, true);
+  }catch(e){
+    console.error('name search error',e);
+    $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
+    $('#count').textContent=L.t.errCount;
+  }
+}
+
+function rerender(){ if(lastResults.length) render(lastResults, mode==='name'); }
+
+function render(results, bypass){
+  let list;
+  if(bypass){ list=results; }
+  else{
+    const minRev=+$('#minReviews').value||0, minRat=+$('#minRating').value||0, pmax=+$('#price').value;
+    list=results.filter(r=>r.p.rating>=minRat && r.p.userRatingCount>=minRev);
+    if(pmax<4) list=list.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; });
+  }
+  const label = bypass ? ('“'+nameQuery+'”') : currentLabel();
   if(!list.length){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
-    $('#count').textContent=`${currentLabel()} · 0${L.t.doneUnit}`; clearMarkers(); return;
+    $('#count').textContent=`${label} · 0${L.t.doneUnit}`; clearMarkers(); return;
   }
-  const sorted=[...list].sort((a,b)=>{
+  const sorted = bypass ? list : [...list].sort((a,b)=>{
     if(sortMode==='dist') return a.dist-b.dist;
     if(sortMode==='reviews') return b.p.userRatingCount-a.p.userRatingCount;
     if(b.p.rating!==a.p.rating) return b.p.rating-a.p.rating;
     return b.p.userRatingCount-a.p.userRatingCount;
   });
-  $('#count').textContent=`${currentLabel()} · ${sorted.length}${L.t.doneUnit}`;
+  $('#count').textContent=`${label} · ${sorted.length}${L.t.doneUnit}`;
   drawMarkers(sorted);
   $('#results').innerHTML=sorted.map((r,i)=>cardHTML(r,i+1)).join('');
   document.querySelectorAll('.card').forEach((el,i)=>el.addEventListener('click',e=>{ if(e.target.closest('a')) return; focusResult(i); }));
@@ -686,12 +727,15 @@ function heat(r){ return r>=4.7?'hot':r>=4.4?'warm':'mild'; }
 function cardHTML(r,rank){
   const p=r.p;
   const name=esc(typeof p.displayName==='string'?p.displayName:(p.displayName?.text||'—'));
-  const rating=p.rating.toFixed(1), reviews=p.userRatingCount.toLocaleString('en-US');
+  const hasR=p.rating!=null&&p.userRatingCount!=null;
   const dist=distFmt(r.dist);
   const typeLabel=typeName(p), price=p.priceLevel?(PRICE[p.priceLevel]||''):'';
   const addr=esc(p.formattedAddress||'');
   const link=p.googleMapsURI||('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name));
-  const ribbon=(p.rating>=4.6&&p.userRatingCount>=1000)?`<span class="ribbon">${esc(L.t.mustEat)}</span>`:'';
+  const ribbon=(hasR&&p.rating>=4.6&&p.userRatingCount>=1000)?`<span class="ribbon">${esc(L.t.mustEat)}</span>`:'';
+  const ratingHtml = hasR
+    ? `<span class="stars ${heat(p.rating)}">${star()} ${p.rating.toFixed(1)}</span><span>·</span><span>${p.userRatingCount.toLocaleString('en-US')}${esc(L.t.reviews)}</span>`
+    : `<span class="pill">${esc(L.t.noRating)}</span>`;
   const hi=hoursInfo(p);
   let hoursHtml='';
   if(hi){
@@ -704,8 +748,7 @@ function cardHTML(r,rank){
     <div class="body">
       <p class="name">${name}${ribbon}</p>
       <div class="meta">
-        <span class="stars ${heat(p.rating)}">${star()} ${rating}</span>
-        <span>·</span><span>${reviews}${esc(L.t.reviews)}</span>
+        ${ratingHtml}
         <span class="pill">${dist}</span>
         ${typeLabel?`<span class="pill">${esc(typeLabel)}</span>`:''}
         ${price?`<span class="pill">${price}</span>`:''}
