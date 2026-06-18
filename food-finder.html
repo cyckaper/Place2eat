@@ -22,7 +22,6 @@
     font-family:"Noto Serif TC","Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);
     display:flex;flex-direction:column;min-height:100vh;-webkit-font-smoothing:antialiased;
   }
-
   header{
     padding:18px 24px;color:#fff;position:relative;overflow:hidden;
     background:var(--flame);background-size:200% 200%;animation:flow 14s ease infinite;
@@ -32,7 +31,7 @@
   header::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 90% -20%,rgba(255,255,255,.28),transparent 60%);pointer-events:none}
   .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;position:relative;z-index:1}
   h1{font-family:"Fraunces",serif;font-weight:900;font-size:28px;margin:0;letter-spacing:-.015em;text-shadow:0 2px 8px rgba(150,50,20,.25)}
-  .tagline{font-size:13.5px;margin:0;color:rgba(255,255,255,.92);max-width:560px}
+  .tagline{font-size:13.5px;margin:0;color:rgba(255,255,255,.92);max-width:540px}
   .region{display:flex;gap:6px;position:relative;z-index:1}
   .region button{font-family:inherit;font-size:13px;font-weight:500;padding:5px 13px;border-radius:18px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.5);color:#fff;cursor:pointer;transition:background .15s}
   .region button:hover{background:rgba(255,255,255,.3)}
@@ -64,23 +63,27 @@
   .field label{font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;font-family:"Fraunces",serif;font-weight:600}
   .field .val{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon)}
   .seg{display:flex;gap:6px}
-  input[type=range]{width:170px;accent-color:var(--persimmon)}
+  input[type=range]{width:160px;accent-color:var(--persimmon)}
   .num{width:80px}
   .grow{flex:1}
   .searchbtn{padding:11px 28px;font-size:15px;font-weight:700}
 
-  .catbar{display:flex;align-items:flex-start;gap:14px;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--warm)}
-  .catlabel{font-family:"Fraunces",serif;font-weight:700;color:var(--chili);font-size:15px;white-space:nowrap;padding-top:6px}
-  .chips{display:flex;gap:9px;flex-wrap:wrap}
-  .chip{font-family:inherit;font-size:14px;padding:7px 15px;border-radius:22px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:transform .12s,background .15s,color .15s,border-color .15s,box-shadow .15s}
+  .catbar{display:flex;align-items:flex-start;gap:14px;padding:13px 24px;border-bottom:1px solid var(--line);background:var(--warm)}
+  .catbar.top{border-bottom:none;padding-bottom:6px}
+  .catbar.bot{padding-top:6px}
+  .catlabel{font-family:"Fraunces",serif;font-weight:700;font-size:14.5px;white-space:nowrap;padding-top:6px;min-width:62px}
+  .catlabel.v{color:var(--herb-dark)} .catlabel.f{color:var(--chili)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-family:inherit;font-size:13.5px;padding:6px 14px;border-radius:22px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;transition:transform .12s,background .15s,color .15s,border-color .15s,box-shadow .15s}
   .chip:hover{border-color:var(--tangerine);color:var(--ink);transform:translateY(-2px)}
-  .chip.on{background:var(--flame);color:#fff;border-color:transparent;box-shadow:0 5px 14px rgba(232,85,42,.3);transform:translateY(-1px)}
+  .chip.onv{background:var(--herb);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(94,140,74,.3)}
+  .chip.onf{background:var(--flame);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(232,85,42,.3)}
 
   main{flex:1;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(330px,1fr);min-height:0}
-  #map{width:100%;height:100%;min-height:380px;background:var(--warm)}
+  #map{width:100%;height:100%;min-height:360px;background:var(--warm)}
   .panel{display:flex;flex-direction:column;border-left:1px solid var(--line);background:var(--cream);min-height:0}
   .panel-head{padding:13px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--paper)}
-  .count{font-family:"Fraunces",serif;font-weight:700;font-size:15px;color:var(--persimmon)}
+  .count{font-family:"Fraunces",serif;font-weight:700;font-size:14.5px;color:var(--persimmon)}
   .sort{display:flex;gap:5px}
   .sort button{padding:6px 11px;font-size:12.5px;background:transparent;color:var(--ink-soft);border:1px solid var(--line)}
   .sort button:hover{box-shadow:none;background:var(--warm)}
@@ -103,6 +106,9 @@
   .addr{font-size:12.5px;color:var(--ink-soft);margin:8px 0 0;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .gmlink{font-size:12.5px;color:var(--herb-dark);text-decoration:none;border-bottom:1.5px solid var(--herb);margin-top:8px;display:inline-block;transition:color .12s,border-color .12s}
   .gmlink:hover{color:var(--persimmon);border-color:var(--tangerine)}
+  .hours{margin-top:8px;font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .hours .open{font-weight:700;color:#fff;background:var(--herb);padding:1px 8px;border-radius:5px;font-size:11px}
+  .hours .closed{font-weight:700;color:#fff;background:#b3a89a;padding:1px 8px;border-radius:5px;font-size:11px}
 
   .empty,.loading{padding:44px 26px;text-align:center;color:var(--ink-soft);font-size:14px;line-height:1.85}
   .empty .big{font-family:"Fraunces",serif;font-size:19px;color:var(--persimmon);display:block;margin-bottom:8px}
@@ -125,7 +131,7 @@
   .err{color:var(--chili);font-size:13px;margin-top:10px}
 
   @media (max-width:860px){
-    main{grid-template-columns:1fr;grid-template-rows:44vh auto}
+    main{grid-template-columns:1fr;grid-template-rows:42vh auto}
     .panel{border-left:none;border-top:1px solid var(--line)}
     #map{min-height:0}
     h1{font-size:24px}
@@ -137,10 +143,7 @@
 <body>
 
 <header>
-  <div class="brand">
-    <h1 id="brand">Place2Eat</h1>
-    <p class="tagline" id="tagline"></p>
-  </div>
+  <div class="brand"><h1 id="brand">Place2Eat</h1><p class="tagline" id="tagline"></p></div>
   <div class="region" id="region">
     <button data-region="tw">台灣</button>
     <button data-region="us">US</button>
@@ -152,10 +155,7 @@
   <h2 id="gateH2"></h2>
   <p id="gateP"></p>
   <ol><li id="gateLi1"></li><li id="gateLi2"></li></ol>
-  <div class="keyrow">
-    <input type="password" id="keyInput" autocomplete="off">
-    <button id="keyGo"></button>
-  </div>
+  <div class="keyrow"><input type="password" id="keyInput" autocomplete="off"><button id="keyGo"></button></div>
   <div id="keyErr" class="err"></div>
 </div>
 
@@ -163,28 +163,27 @@
   <div class="controls">
     <div class="field">
       <label id="centerLabel"></label>
-      <div class="seg">
-        <button class="ghost" id="locBtn"></button>
-        <button class="ghost" id="pinBtn"></button>
-      </div>
+      <div class="seg"><button class="ghost" id="locBtn"></button><button class="ghost" id="pinBtn"></button></div>
     </div>
-    <div class="field">
-      <label id="goLabel"></label>
-      <input type="text" id="goInput" style="width:180px" autocomplete="off">
-    </div>
+    <div class="field"><label id="goLabel"></label><input type="text" id="goInput" style="width:180px" autocomplete="off"></div>
     <div class="field">
       <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
       <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
     </div>
     <div class="field"><label id="minRevLabel"></label><input type="number" class="num" id="minReviews" min="0" step="50" value="300"></div>
     <div class="field"><label id="minRatLabel"></label><input type="number" class="num" id="minRating" min="0" max="5" step="0.1" value="4.0"></div>
+    <div class="field"><label><span id="priceLabel"></span> <span class="val" id="priceVal"></span></label><input type="range" id="price" min="1" max="4" step="1" value="4" style="width:130px"></div>
     <div class="field grow"></div>
     <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
   </div>
 
-  <div class="catbar">
-    <span class="catlabel" id="catlabel"></span>
+  <div class="catbar top">
+    <span class="catlabel v" id="venuelabel"></span>
     <div class="chips" id="chips"></div>
+  </div>
+  <div class="catbar bot">
+    <span class="catlabel f" id="foodlabel"></span>
+    <div class="chips" id="foodChips"></div>
   </div>
 
   <main>
@@ -207,16 +206,16 @@
 <script>
 const $ = s => document.querySelector(s);
 
-/* ============== LOCALES ============== */
+/* ============== LOCALES (cats = venue/format, foods = cuisine) ============== */
 const LOCALES = {
   tw:{
     name:'台灣', lang:'zh-Hant', apiLang:'zh-TW', unit:'km',
     radUnit:' 公里', nearSuffix:' 公尺', farSuffix:' 公里',
-    rad:{min:500,max:5000,step:100,def:2000},
-    fallback:{lat:25.0330,lng:121.5654},
+    rad:{min:500,max:5000,step:100,def:2000}, fallback:{lat:25.0330,lng:121.5654},
+    priceAmt:['','NT$200','NT$600','NT$1200'],
     t:{
       brand:'口碑覓食',
-      tagline:'在地圖上選個點、挑想吃的，挖出評論又多又高分的真口碑',
+      tagline:'選地點、交叉「店家 × 食物」兩種分類，挖出評論多又高分的真口碑',
       gateH2:'放入 Google Maps API 金鑰',
       gateP:'金鑰只存在這台裝置的瀏覽器，正式部署時建議設在 Netlify。',
       gateLi1:'啟用 Maps JavaScript API 與 Places API (New)',
@@ -226,12 +225,14 @@ const LOCALES = {
       centerLabel:'搜尋中心', myLoc:'我的位置', locating:'定位中…', pickMap:'點地圖選點',
       goLabel:'前往地點', goPh:'例如：信義區',
       radiusLabel:'搜尋半徑', minRev:'評論數 ≥', minRat:'評分 ≥', searchBtn:'搜尋此範圍',
-      findLabel:'找哪種店', sRating:'評分', sPop:'人氣', sDist:'距離',
-      initCount:'挑一種就開動',
-      initBig:'設好中心，挑一種想吃的',
-      initText:'選了分類就自動搜尋。只端出評論數與評分同時達標的店——人多、分高，被刷單灌水的機率自然低很多。',
-      noResBig:'這個範圍沒有達標的店', noResText:'放大半徑，或把「評論數 ≥」門檻調低一點再試。',
-      note:'選分類後依該類人氣排序撈店再合併（高評論數的熱門店優先）。每次查詢上限 20 筆，密集區可縮小半徑或挑更精確的分類。',
+      venueLabel:'店家', foodLabel:'食物', sRating:'評分', sPop:'人氣', sDist:'距離',
+      priceLabel:'價位', priceAny:'不限',
+      hrOpen:'營業中', hrClosed:'休息中', hrClosedToday:'今日休息',
+      initCount:'挑店家或食物開動',
+      initBig:'設好中心，挑店家或食物',
+      initText:'兩排可以單選或交叉。只端出評論數與評分同時達標的店——人多、分高，被刷單灌水的機率自然低很多。',
+      noResBig:'這個組合沒有達標的店', noResText:'放寬其中一排到「全部」，或放大半徑、調低「評論數 ≥」再試。',
+      note:'店家×食物交叉：以食物類別搜尋、再用店家型態交集過濾（高評論數的熱門店優先）。每次查詢上限 20 筆，密集區可縮小半徑。',
       loading:'搜尋中…比對評論數與評分', failBig:'查詢失敗',
       failText:'請確認金鑰已啟用 Places API (New)，且未被網域限制擋下。',
       searching:'搜尋中…', errCount:'錯誤', doneUnit:' 間達標', reviews:' 則評論',
@@ -239,30 +240,47 @@ const LOCALES = {
       alertNoGeo:'此裝置不支援定位。', alertGeoFail:'無法取得位置，請改用「點地圖選點」。',
     },
     cats:[
-      {id:'all',   zh:'全部・不限', types:['restaurant','meal_takeaway','cafe','bakery','bar']},
-      {id:'stall', zh:'攤位',      types:['meal_takeaway','food_court','snack_bar']},
-      {id:'rest',  zh:'餐廳',      types:['restaurant']},
-      {id:'rechao',zh:'熱炒',      types:['taiwanese_restaurant','chinese_restaurant','seafood_restaurant','bar_and_grill']},
-      {id:'cafe',  zh:'咖啡',      types:['cafe','coffee_shop','coffee_stand','coffee_roastery']},
-      {id:'snack', zh:'小吃',      types:['snack_bar','noodle_shop','dumpling_restaurant','soup_restaurant','meal_takeaway']},
-      {id:'drink', zh:'冷飲',      types:['juice_shop','tea_house']},
-      {id:'ice',   zh:'冰店',      types:['ice_cream_shop','dessert_shop']},
-      {id:'cvs',   zh:'便利商店',  types:['convenience_store']},
-      {id:'bf',    zh:'早餐店',    types:['breakfast_restaurant','brunch_restaurant']},
-      {id:'bake',  zh:'烘焙・麵包', types:['bakery','cake_shop','pastry_shop','donut_shop']},
-      {id:'sweet', zh:'甜點',      types:['dessert_shop','dessert_restaurant','confectionery','chocolate_shop']},
-      {id:'bar',   zh:'酒吧',      types:['bar','pub','wine_bar','cocktail_bar','beer_garden','sports_bar']},
-      {id:'fast',  zh:'速食',      types:['fast_food_restaurant','hamburger_restaurant']},
-      {id:'mkt',   zh:'超市・賣場', types:['supermarket','grocery_store','asian_grocery_store']},
+      {id:'all',  zh:'全部',     types:['restaurant','meal_takeaway','cafe','bakery','bar']},
+      {id:'stall',zh:'攤位',     types:['meal_takeaway','food_court','snack_bar']},
+      {id:'rest', zh:'餐廳',     types:['restaurant']},
+      {id:'rechao',zh:'熱炒',    types:['bar_and_grill','taiwanese_restaurant']},
+      {id:'snack',zh:'小吃店',   types:['snack_bar','noodle_shop','soup_restaurant']},
+      {id:'cafe', zh:'咖啡廳',   types:['cafe','coffee_shop','coffee_stand']},
+      {id:'drink',zh:'飲料店',   types:['juice_shop','tea_house']},
+      {id:'ice',  zh:'冰店',     types:['ice_cream_shop','dessert_shop']},
+      {id:'bf',   zh:'早餐店',   types:['breakfast_restaurant','brunch_restaurant']},
+      {id:'bake', zh:'烘焙坊',   types:['bakery','cake_shop','pastry_shop','donut_shop']},
+      {id:'sweet',zh:'甜點店',   types:['dessert_shop','dessert_restaurant','confectionery']},
+      {id:'bar',  zh:'酒吧',     types:['bar','pub','wine_bar','cocktail_bar','beer_garden']},
+      {id:'fast', zh:'速食店',   types:['fast_food_restaurant','hamburger_restaurant']},
+      {id:'cvs',  zh:'便利商店', types:['convenience_store']},
+      {id:'mkt',  zh:'超市賣場', types:['supermarket','grocery_store','asian_grocery_store']},
+    ],
+    foods:[
+      {id:'all',   zh:'全部', types:[]},
+      {id:'tw',    zh:'台菜', types:['taiwanese_restaurant']},
+      {id:'cn',    zh:'中式', types:['chinese_restaurant','cantonese_restaurant','dim_sum_restaurant','dumpling_restaurant']},
+      {id:'jp',    zh:'日式', types:['japanese_restaurant','sushi_restaurant','ramen_restaurant','japanese_izakaya_restaurant','tonkatsu_restaurant']},
+      {id:'kr',    zh:'韓式', types:['korean_restaurant','korean_barbecue_restaurant']},
+      {id:'hotpot',zh:'火鍋', types:['hot_pot_restaurant']},
+      {id:'bbq',   zh:'燒烤', types:['barbecue_restaurant','yakiniku_restaurant']},
+      {id:'noodle',zh:'麵食', types:['noodle_shop','ramen_restaurant','chinese_noodle_restaurant']},
+      {id:'it',    zh:'義式', types:['italian_restaurant','pizza_restaurant']},
+      {id:'us',    zh:'美式', types:['american_restaurant','hamburger_restaurant']},
+      {id:'sea',   zh:'南洋', types:['thai_restaurant','vietnamese_restaurant','indonesian_restaurant','indian_restaurant']},
+      {id:'seaf',  zh:'海鮮', types:['seafood_restaurant']},
+      {id:'veg',   zh:'素食', types:['vegetarian_restaurant','vegan_restaurant']},
+      {id:'dsrt',  zh:'甜點', types:['dessert_shop','dessert_restaurant','ice_cream_shop','cake_shop']},
+      {id:'coffee',zh:'咖啡', types:['cafe','coffee_shop']},
     ],
   },
   us:{
     name:'US', lang:'en', apiLang:'en', unit:'mi',
-    radUnit:' mi', rad:{min:800,max:8000,step:200,def:3200},
-    fallback:{lat:40.7128,lng:-74.0060},
+    radUnit:' mi', rad:{min:800,max:8000,step:200,def:3200}, fallback:{lat:40.7128,lng:-74.0060},
+    priceAmt:['','$10','$25','$50'],
     t:{
       brand:'Place2Eat',
-      tagline:'Drop a pin, pick a type, and surface places with lots of reviews and high ratings',
+      tagline:'Cross “Place × Food” to surface spots with lots of reviews and high ratings',
       gateH2:'Add your Google Maps API key',
       gateP:'The key stays in this browser only. For production, set it in Netlify.',
       gateLi1:'Enable Maps JavaScript API and Places API (New)',
@@ -272,12 +290,14 @@ const LOCALES = {
       centerLabel:'Search center', myLoc:'My location', locating:'Locating…', pickMap:'Pick on map',
       goLabel:'Go to place', goPh:'e.g. Urbana, IL',
       radiusLabel:'Radius', minRev:'Reviews ≥', minRat:'Rating ≥', searchBtn:'Search this area',
-      findLabel:'What kind of place', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
-      initCount:'Pick one to start',
-      initBig:'Set a center, then pick a type',
-      initText:'Picking a type searches automatically. Only places that clear both the review-count and rating bars show up — busy and well-rated, so they are hard to fake.',
-      noResBig:'Nothing clears the bar here', noResText:'Widen the radius, or lower the “Reviews ≥” threshold and try again.',
-      note:'Each type is ranked by popularity and merged (heavily-reviewed places first). Each query returns up to 20; in dense areas, shrink the radius or pick a more specific type.',
+      venueLabel:'Place', foodLabel:'Food', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
+      priceLabel:'Price', priceAny:'Any',
+      hrOpen:'Open', hrClosed:'Closed', hrClosedToday:'Closed today',
+      initCount:'Pick a place type or food',
+      initBig:'Set a center, then pick',
+      initText:'Use either row alone or cross them. Only places that clear both the review-count and rating bars show up — busy and well-rated, so they are hard to fake.',
+      noResBig:'Nothing clears the bar', noResText:'Set one row to “All”, or widen the radius / lower “Reviews ≥” and try again.',
+      note:'Place × Food cross: searches by cuisine, then keeps results whose type matches the place format (heavily-reviewed first). Each query returns up to 20.',
       loading:'Searching… matching reviews and ratings', failBig:'Search failed',
       failText:'Make sure the key has Places API (New) enabled and is not blocked by domain restrictions.',
       searching:'Searching…', errCount:'Error', doneUnit:' places', reviews:' reviews',
@@ -285,31 +305,46 @@ const LOCALES = {
       alertNoGeo:'Geolocation is not supported on this device.', alertGeoFail:'Could not get your location. Use “Pick on map” instead.',
     },
     cats:[
-      {id:'all',    zh:'Anything',          types:['restaurant','meal_takeaway','cafe','bakery','bar']},
-      {id:'rest',   zh:'Restaurants',       types:['restaurant']},
-      {id:'diner',  zh:'Diner',             types:['diner','family_restaurant']},
-      {id:'fast',   zh:'Fast food',         types:['fast_food_restaurant','hamburger_restaurant']},
-      {id:'pizza',  zh:'Pizza',             types:['pizza_restaurant']},
-      {id:'bbq',    zh:'BBQ & Grill',       types:['barbecue_restaurant','bar_and_grill','steak_house']},
-      {id:'brunch', zh:'Brunch',            types:['breakfast_restaurant','brunch_restaurant']},
-      {id:'cafe',   zh:'Cafe & Coffee',     types:['cafe','coffee_shop','coffee_stand']},
-      {id:'bake',   zh:'Bakery',            types:['bakery','donut_shop','bagel_shop','cake_shop']},
-      {id:'dessert',zh:'Dessert & Ice cream',types:['ice_cream_shop','dessert_shop','dessert_restaurant','confectionery']},
-      {id:'sand',   zh:'Sandwich & Deli',   types:['sandwich_shop','bagel_shop']},
-      {id:'bar',    zh:'Bar & Pub',         types:['bar','pub','wine_bar','cocktail_bar','sports_bar']},
-      {id:'togo',   zh:'Takeout',           types:['meal_takeaway','meal_delivery','food_court']},
-      {id:'cvs',    zh:'Convenience',       types:['convenience_store']},
-      {id:'groc',   zh:'Grocery',           types:['supermarket','grocery_store']},
+      {id:'all',   zh:'All',          types:['restaurant','meal_takeaway','cafe','bakery','bar']},
+      {id:'rest',  zh:'Restaurant',   types:['restaurant']},
+      {id:'diner', zh:'Diner',        types:['diner','family_restaurant']},
+      {id:'fast',  zh:'Fast food',    types:['fast_food_restaurant','hamburger_restaurant']},
+      {id:'cafe',  zh:'Cafe',         types:['cafe','coffee_shop','coffee_stand']},
+      {id:'bar',   zh:'Bar & Pub',    types:['bar','pub','wine_bar','cocktail_bar','sports_bar']},
+      {id:'bake',  zh:'Bakery',       types:['bakery','donut_shop','bagel_shop','cake_shop']},
+      {id:'dsrt',  zh:'Dessert shop', types:['ice_cream_shop','dessert_shop','confectionery']},
+      {id:'togo',  zh:'Takeout',      types:['meal_takeaway','meal_delivery','food_court']},
+      {id:'brunch',zh:'Brunch',       types:['breakfast_restaurant','brunch_restaurant']},
+      {id:'cvs',   zh:'Convenience',  types:['convenience_store']},
+      {id:'groc',  zh:'Grocery',      types:['supermarket','grocery_store']},
+    ],
+    foods:[
+      {id:'all',  zh:'All',         types:[]},
+      {id:'amer', zh:'American',    types:['american_restaurant','hamburger_restaurant']},
+      {id:'mex',  zh:'Mexican',     types:['mexican_restaurant']},
+      {id:'ital', zh:'Italian',     types:['italian_restaurant']},
+      {id:'pizza',zh:'Pizza',       types:['pizza_restaurant']},
+      {id:'chin', zh:'Chinese',     types:['chinese_restaurant']},
+      {id:'jpn',  zh:'Japanese',    types:['japanese_restaurant','sushi_restaurant','ramen_restaurant']},
+      {id:'kor',  zh:'Korean',      types:['korean_restaurant','korean_barbecue_restaurant']},
+      {id:'thai', zh:'Thai',        types:['thai_restaurant']},
+      {id:'ind',  zh:'Indian',      types:['indian_restaurant']},
+      {id:'med',  zh:'Mediterranean',types:['mediterranean_restaurant','greek_restaurant','middle_eastern_restaurant']},
+      {id:'bbq',  zh:'BBQ & Steak', types:['barbecue_restaurant','steak_house']},
+      {id:'seaf', zh:'Seafood',     types:['seafood_restaurant']},
+      {id:'veg',  zh:'Vegetarian',  types:['vegetarian_restaurant','vegan_restaurant']},
+      {id:'dsrt', zh:'Dessert',     types:['dessert_shop','ice_cream_shop','donut_shop']},
+      {id:'cof',  zh:'Coffee',      types:['cafe','coffee_shop']},
     ],
   },
   jp:{
     name:'日本', lang:'ja', apiLang:'ja', unit:'km',
     radUnit:' km', nearSuffix:'m', farSuffix:'km',
-    rad:{min:500,max:5000,step:100,def:2000},
-    fallback:{lat:35.6762,lng:139.6503},
+    rad:{min:500,max:5000,step:100,def:2000}, fallback:{lat:35.6762,lng:139.6503},
+    priceAmt:['','¥1,000','¥3,000','¥6,000'],
     t:{
       brand:'クチコミ飯',
-      tagline:'地図でピンを置いて種類を選ぶと、レビューが多くて高評価のお店だけが出ます',
+      tagline:'「お店 × 料理」を掛け合わせて、レビューが多くて高評価のお店を探す',
       gateH2:'Google Maps API キーを入力',
       gateP:'キーはこの端末のブラウザにのみ保存されます。本番では Netlify に設定してください。',
       gateLi1:'Maps JavaScript API と Places API (New) を有効化',
@@ -319,12 +354,14 @@ const LOCALES = {
       centerLabel:'検索の中心', myLoc:'現在地', locating:'位置取得中…', pickMap:'地図で指定',
       goLabel:'場所へ移動', goPh:'例：渋谷',
       radiusLabel:'検索半径', minRev:'レビュー数 ≥', minRat:'評価 ≥', searchBtn:'この範囲を検索',
-      findLabel:'お店の種類', sRating:'評価', sPop:'人気', sDist:'距離',
-      initCount:'種類を選んでスタート',
-      initBig:'中心を決めて、種類を選択',
-      initText:'種類を選ぶと自動で検索します。レビュー数と評価の両方を満たすお店だけを表示——多くの人が訪れて高評価なので、サクラの可能性は低くなります。',
-      noResBig:'この範囲に該当なし', noResText:'半径を広げるか、「レビュー数 ≥」を下げて再検索してください。',
-      note:'種類ごとに人気順で取得して統合します（レビュー数の多い店を優先）。1 回の検索は最大 20 件。密集地では半径を狭めるか、より具体的な種類を選んでください。',
+      venueLabel:'お店', foodLabel:'料理', sRating:'評価', sPop:'人気', sDist:'距離',
+      priceLabel:'価格', priceAny:'指定なし',
+      hrOpen:'営業中', hrClosed:'営業時間外', hrClosedToday:'本日休み',
+      initCount:'お店か料理を選んでスタート',
+      initBig:'中心を決めて、選択',
+      initText:'2 列は単独でも掛け合わせでも使えます。レビュー数と評価の両方を満たすお店だけを表示——多くの人が訪れて高評価なので、サクラの可能性は低くなります。',
+      noResBig:'この組み合わせは該当なし', noResText:'どちらかを「すべて」にするか、半径を広げる・「レビュー数 ≥」を下げて再検索してください。',
+      note:'お店×料理：料理で検索し、お店の業態に一致するものを残します（レビュー数の多い店を優先）。1 回の検索は最大 20 件。',
       loading:'検索中…レビュー数と評価を照合', failBig:'検索に失敗しました',
       failText:'キーで Places API (New) が有効で、ドメイン制限に阻まれていないか確認してください。',
       searching:'検索中…', errCount:'エラー', doneUnit:' 件', reviews:' 件のレビュー',
@@ -333,43 +370,62 @@ const LOCALES = {
     },
     cats:[
       {id:'all',    zh:'すべて',       types:['restaurant','meal_takeaway','cafe','bakery','bar']},
-      {id:'ramen',  zh:'ラーメン',     types:['ramen_restaurant','noodle_shop']},
-      {id:'sushi',  zh:'寿司',         types:['sushi_restaurant','japanese_restaurant']},
-      {id:'izakaya',zh:'居酒屋',       types:['japanese_izakaya_restaurant','bar']},
-      {id:'yakiniku',zh:'焼肉',        types:['yakiniku_restaurant','barbecue_restaurant','korean_barbecue_restaurant']},
-      {id:'teishoku',zh:'定食・食堂',  types:['japanese_restaurant','diner','family_restaurant','cafeteria']},
-      {id:'soba',   zh:'そば・うどん', types:['noodle_shop','japanese_restaurant']},
-      {id:'tonkatsu',zh:'とんかつ',    types:['tonkatsu_restaurant']},
-      {id:'curry',  zh:'カレー',       types:['japanese_curry_restaurant']},
+      {id:'rest',   zh:'レストラン',   types:['restaurant']},
+      {id:'shokudo',zh:'食堂・定食屋', types:['diner','family_restaurant','cafeteria','japanese_restaurant']},
+      {id:'izakaya',zh:'居酒屋',       types:['japanese_izakaya_restaurant']},
       {id:'cafe',   zh:'カフェ・喫茶', types:['cafe','coffee_shop','coffee_stand','tea_house']},
+      {id:'togo',   zh:'屋台・テイクアウト',types:['meal_takeaway','meal_delivery','food_court']},
       {id:'fast',   zh:'ファストフード',types:['fast_food_restaurant','hamburger_restaurant']},
-      {id:'bake',   zh:'パン屋',       types:['bakery','cake_shop','pastry_shop','donut_shop']},
-      {id:'sweet',  zh:'スイーツ・甘味',types:['dessert_shop','dessert_restaurant','ice_cream_shop','confectionery']},
       {id:'bar',    zh:'バー',         types:['bar','wine_bar','cocktail_bar','pub','beer_garden']},
+      {id:'bake',   zh:'パン屋',       types:['bakery','cake_shop','pastry_shop','donut_shop']},
+      {id:'sweet',  zh:'スイーツ店',   types:['dessert_shop','dessert_restaurant','ice_cream_shop']},
       {id:'cvs',    zh:'コンビニ',     types:['convenience_store']},
       {id:'super',  zh:'スーパー',     types:['supermarket','grocery_store','asian_grocery_store']},
+    ],
+    foods:[
+      {id:'all',   zh:'すべて',   types:[]},
+      {id:'washoku',zh:'和食',    types:['japanese_restaurant']},
+      {id:'ramen', zh:'ラーメン', types:['ramen_restaurant','noodle_shop']},
+      {id:'sushi', zh:'寿司',     types:['sushi_restaurant']},
+      {id:'yakiniku',zh:'焼肉',   types:['yakiniku_restaurant','korean_barbecue_restaurant']},
+      {id:'tonkatsu',zh:'とんかつ',types:['tonkatsu_restaurant']},
+      {id:'soba',  zh:'そば・うどん',types:['noodle_shop']},
+      {id:'curry', zh:'カレー',   types:['japanese_curry_restaurant']},
+      {id:'chuka', zh:'中華',     types:['chinese_restaurant']},
+      {id:'ital',  zh:'イタリアン',types:['italian_restaurant','pizza_restaurant']},
+      {id:'yoshoku',zh:'洋食',    types:['american_restaurant','western_restaurant','hamburger_restaurant']},
+      {id:'kankoku',zh:'韓国料理',types:['korean_restaurant','korean_barbecue_restaurant']},
+      {id:'asian', zh:'アジアン', types:['thai_restaurant','vietnamese_restaurant','indonesian_restaurant']},
+      {id:'seaf',  zh:'海鮮',     types:['seafood_restaurant']},
+      {id:'sweets',zh:'スイーツ', types:['dessert_shop','ice_cream_shop','cake_shop']},
+      {id:'coffee',zh:'コーヒー', types:['cafe','coffee_shop']},
     ],
   },
 };
 
-let region = 'tw';
-let L = LOCALES.tw;
+let region='tw', L=LOCALES.tw;
 let map, centerMarker, searchCircle, searchCenter;
-let resultMarkers = [], lastResults = [];
-let sortMode = localStorage.getItem('ff_sort') || 'rating';
-let selectedCat = 'all';
-let pinMode = false, userLocated = false;
+let resultMarkers=[], lastResults=[];
+let sortMode=localStorage.getItem('ff_sort')||'rating';
+let selectedCat='all', selectedFood='all';
+let pinMode=false, userLocated=false;
 
-const catLabel = id => (L.cats.find(c=>c.id===id)||L.cats[0]).zh;
-const chunk = (a,n) => { const o=[]; for(let i=0;i<a.length;i+=n) o.push(a.slice(i,i+n)); return o; };
+const chunk=(a,n)=>{const o=[];for(let i=0;i<a.length;i+=n)o.push(a.slice(i,i+n));return o;};
+function venueObj(){ return L.cats.find(c=>c.id===selectedCat)||L.cats[0]; }
+function foodObj(){ return L.foods.find(c=>c.id===selectedFood)||L.foods[0]; }
+function currentLabel(){
+  const v=venueObj(), f=foodObj(), parts=[];
+  if(f.id!=='all') parts.push(f.zh);
+  if(v.id!=='all') parts.push(v.zh);
+  return parts.length?parts.join(' · '):v.zh;
+}
 
-/* ============== locale application ============== */
+/* ============== locale ============== */
 function applyLocale(){
   const t=L.t;
   document.documentElement.lang=L.lang;
   document.title=t.brand;
-  $('#brand').textContent=t.brand;
-  $('#tagline').textContent=t.tagline;
+  $('#brand').textContent=t.brand; $('#tagline').textContent=t.tagline;
   $('#gateH2').textContent=t.gateH2; $('#gateP').textContent=t.gateP;
   $('#gateLi1').textContent=t.gateLi1; $('#gateLi2').textContent=t.gateLi2;
   $('#keyInput').placeholder=t.keyPh; $('#keyGo').textContent=t.keyGo;
@@ -378,81 +434,67 @@ function applyLocale(){
   $('#locBtn').textContent=t.myLoc; $('#pinBtn').textContent=t.pickMap;
   $('#radiusLabel').textContent=t.radiusLabel;
   $('#minRevLabel').textContent=t.minRev; $('#minRatLabel').textContent=t.minRat;
-  $('#searchBtn').textContent=t.searchBtn; $('#catlabel').textContent=t.findLabel;
+  $('#searchBtn').textContent=t.searchBtn;
+  $('#priceLabel').textContent=t.priceLabel;
+  $('#venuelabel').textContent=t.venueLabel; $('#foodlabel').textContent=t.foodLabel;
   $('#sRating').textContent=t.sRating; $('#sPop').textContent=t.sPop; $('#sDist').textContent=t.sDist;
   $('#note').textContent=t.note;
   document.querySelectorAll('.region button').forEach(b=>b.classList.toggle('on',b.dataset.region===region));
-  // radius slider config
-  const r=L.rad, el=$('#radius');
-  el.min=r.min; el.max=r.max; el.step=r.step;
+  const r=L.rad, el=$('#radius'); el.min=r.min; el.max=r.max; el.step=r.step;
   if(+el.value<r.min||+el.value>r.max) el.value=r.def;
-  updateRadLabel();
+  updateRadLabel(); updatePriceLabel();
 }
-
 function setRegion(r){
   if(!LOCALES[r]) r='tw';
   if(r===region && map) return;
-  region=r; L=LOCALES[r]; selectedCat=L.cats[0].id;
+  region=r; L=LOCALES[r]; selectedCat='all'; selectedFood='all';
   localStorage.setItem('ff_region',r);
   if(history.replaceState) history.replaceState(null,'','#'+r);
   applyLocale();
   if(map){
     if(searchCircle) searchCircle.setRadius(+$('#radius').value);
     setCenter(new google.maps.LatLng(L.fallback.lat,L.fallback.lng),true);
-    map.setZoom(12);
-    userLocated=true;   // explicit region choice; don't let async geolocation override it
-    renderChips();
-    showInitial();
-    clearMarkers();
+    map.setZoom(12); userLocated=true;
+    renderChips(); showInitial(); clearMarkers();
   }
 }
-
 function showInitial(){
   $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.initBig)}</span>${esc(L.t.initText)}</div>`;
   $('#count').textContent=L.t.initCount;
 }
 
-/* ============== key resolution ============== */
-const INJECTED = "%%GOOGLE_MAPS_KEY%%";
+/* ============== key ============== */
+const INJECTED="%%GOOGLE_MAPS_KEY%%";
 function resolveKey(){
   if(window.GOOGLE_MAPS_KEY) return window.GOOGLE_MAPS_KEY;
   if(INJECTED && INJECTED.indexOf('%%')!==0) return INJECTED;
-  return localStorage.getItem('ff_key') || '';
+  return localStorage.getItem('ff_key')||'';
 }
-
 (function init(){
   const h=(location.hash||'').replace('#','');
   region = LOCALES[h] ? h : (LOCALES[localStorage.getItem('ff_region')] ? localStorage.getItem('ff_region') : 'tw');
-  L=LOCALES[region]; selectedCat=L.cats[0].id;
+  L=LOCALES[region];
   if(localStorage.getItem('ff_rev')) $('#minReviews').value=localStorage.getItem('ff_rev');
   if(localStorage.getItem('ff_rat')) $('#minRating').value=localStorage.getItem('ff_rat');
+  if(localStorage.getItem('ff_price')) $('#price').value=localStorage.getItem('ff_price');
   applyLocale();
   document.querySelectorAll('.region button').forEach(b=>b.addEventListener('click',()=>setRegion(b.dataset.region)));
   const key=resolveKey();
   if(key) boot(key); else $('#gate').classList.remove('hidden');
 })();
-
 $('#keyGo').addEventListener('click', () => {
   const k=$('#keyInput').value.trim();
   if(!k){ $('#keyErr').textContent=L.t.errEmpty; return; }
   localStorage.setItem('ff_key',k); boot(k);
 });
 $('#keyInput').addEventListener('keydown', e => { if(e.key==='Enter') $('#keyGo').click(); });
-
-function boot(key){
-  loadMapsApi(key).then(initApp).catch(err=>{
-    $('#gate').classList.remove('hidden'); $('#keyErr').textContent=L.t.errLoad; console.error(err);
-  });
-}
+function boot(key){ loadMapsApi(key).then(initApp).catch(err=>{ $('#gate').classList.remove('hidden'); $('#keyErr').textContent=L.t.errLoad; console.error(err); }); }
 function loadMapsApi(key){
   return new Promise((resolve,reject)=>{
     if(window.google&&window.google.maps&&window.google.maps.importLibrary){ resolve(); return; }
     ((g)=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await(a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({key:key,v:"weekly"});
     const t0=Date.now();
-    const iv=setInterval(()=>{
-      if(window.google&&window.google.maps&&window.google.maps.importLibrary){clearInterval(iv);resolve();}
-      else if(Date.now()-t0>15000){clearInterval(iv);reject(new Error('timeout'));}
-    },80);
+    const iv=setInterval(()=>{ if(window.google&&window.google.maps&&window.google.maps.importLibrary){clearInterval(iv);resolve();} else if(Date.now()-t0>15000){clearInterval(iv);reject(new Error('timeout'));} },80);
   });
 }
 
@@ -461,25 +503,18 @@ async function initApp(){
   $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
   const { Map } = await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
-  map = new Map($('#map'), {
-    center:L.fallback, zoom:14, mapId:'DEMO_MAP_ID',
-    mapTypeControl:false, streetViewControl:false, fullscreenControl:false, clickableIcons:false,
-  });
+  map = new Map($('#map'), { center:L.fallback, zoom:14, mapId:'DEMO_MAP_ID', mapTypeControl:false, streetViewControl:false, fullscreenControl:false, clickableIcons:false });
   searchCenter = new google.maps.LatLng(L.fallback.lat, L.fallback.lng);
-
   const cEl=document.createElement('div'); cEl.className='ctr';
   centerMarker = new AdvancedMarkerElement({ map, position:searchCenter, content:cEl, gmpDraggable:true, zIndex:9999 });
   centerMarker.addListener('dragend', ()=>{ userLocated=true; setCenter(toLatLng(centerMarker.position), false); });
-
-  searchCircle = new google.maps.Circle({ map, center:searchCenter, radius:+$('#radius').value,
-    strokeColor:'#e8552a', strokeOpacity:.55, strokeWeight:1.5, fillColor:'#f6b53d', fillOpacity:.10, clickable:false });
-
+  searchCircle = new google.maps.Circle({ map, center:searchCenter, radius:+$('#radius').value, strokeColor:'#e8552a', strokeOpacity:.55, strokeWeight:1.5, fillColor:'#f6b53d', fillOpacity:.10, clickable:false });
   map.addListener('click', e=>{ if(pinMode){ userLocated=true; setCenter(e.latLng,true); pinMode=false; $('#pinBtn').classList.remove('on'); }});
 
   $('#radius').addEventListener('input', ()=>{ updateRadLabel(); searchCircle.setRadius(+$('#radius').value); });
   $('#minReviews').addEventListener('change', ()=>localStorage.setItem('ff_rev',$('#minReviews').value));
   $('#minRating').addEventListener('change', ()=>localStorage.setItem('ff_rat',$('#minRating').value));
+  $('#price').addEventListener('input', ()=>{ updatePriceLabel(); localStorage.setItem('ff_price',$('#price').value); if(lastResults.length) render(lastResults); });
   $('#searchBtn').addEventListener('click', runSearch);
   $('#locBtn').addEventListener('click', useMyLocation);
   $('#pinBtn').addEventListener('click', ()=>{ pinMode=!pinMode; $('#pinBtn').classList.toggle('on',pinMode); });
@@ -492,46 +527,71 @@ async function initApp(){
       if(lastResults.length) render(lastResults);
     });
   });
-
-  renderChips();
-  showInitial();
-  silentGeolocate();
+  renderChips(); showInitial(); silentGeolocate();
 }
 
 function silentGeolocate(){
   if(!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos=>{
-    if(userLocated) return;   // user already picked a point or chose a region — don't yank the map
+    if(userLocated) return;
     userLocated=true;
     setCenter(new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude),true); map.setZoom(15);
   }, ()=>{}, { enableHighAccuracy:true, timeout:8000 });
 }
 
-function renderChips(){
-  const wrap=$('#chips'); wrap.innerHTML='';
-  L.cats.forEach(cat=>{
+function renderChipRow(container, list, selId, cls, onPick){
+  container.innerHTML='';
+  list.forEach(cat=>{
     const b=document.createElement('button');
-    b.className='chip'+(cat.id===selectedCat?' on':'');
+    b.className='chip'+(cat.id===selId?' '+cls:'');
     b.textContent=cat.zh; b.dataset.id=cat.id;
-    b.addEventListener('click',()=>{
-      selectedCat=cat.id;
-      document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on'); runSearch();
-    });
-    wrap.appendChild(b);
+    b.addEventListener('click',()=>onPick(cat.id));
+    container.appendChild(b);
   });
+}
+function renderChips(){
+  renderChipRow($('#chips'), L.cats, selectedCat, 'onv', id=>{ selectedCat=id; renderChips(); runSearch(); });
+  renderChipRow($('#foodChips'), L.foods, selectedFood, 'onf', id=>{ selectedFood=id; renderChips(); runSearch(); });
 }
 
 function toLatLng(p){ if(!p) return searchCenter; if(typeof p.lat==='function') return p; return new google.maps.LatLng(p.lat,p.lng); }
 function setCenter(ll,pan){ searchCenter=toLatLng(ll); centerMarker.position=searchCenter; searchCircle.setCenter(searchCenter); if(pan) map.panTo(searchCenter); }
-function updateRadLabel(){
-  const m=+$('#radius').value;
-  const v=(L.unit==='mi')?(m/1609.34).toFixed(1):(m/1000).toFixed(1);
-  $('#radVal').textContent=v+L.radUnit;
+function updateRadLabel(){ const m=+$('#radius').value; const v=(L.unit==='mi')?(m/1609.34).toFixed(1):(m/1000).toFixed(1); $('#radVal').textContent=v+L.radUnit; }
+function distFmt(m){ if(L.unit==='mi'){ return m<160?Math.round(m*3.281)+' ft':(m/1609.34).toFixed(1)+' mi'; } return m<1000?Math.round(m)+L.nearSuffix:(m/1000).toFixed(1)+L.farSuffix; }
+function updatePriceLabel(){
+  const v=+$('#price').value;
+  if(v>=4){ $('#priceVal').textContent=L.t.priceAny; return; }
+  $('#priceVal').textContent='≤ '+'$'.repeat(v)+' · '+L.priceAmt[v];
 }
-function distFmt(m){
-  if(L.unit==='mi'){ return m<160 ? Math.round(m*3.281)+' ft' : (m/1609.34).toFixed(1)+' mi'; }
-  return m<1000 ? Math.round(m)+L.nearSuffix : (m/1000).toFixed(1)+L.farSuffix;
+const PRICE_RANK={PRICE_LEVEL_FREE:1,PRICE_LEVEL_INEXPENSIVE:1,PRICE_LEVEL_MODERATE:2,PRICE_LEVEL_EXPENSIVE:3,PRICE_LEVEL_VERY_EXPENSIVE:4};
+function priceRank(pl){ return pl?(PRICE_RANK[pl]||null):null; }
+function hoursInfo(p){
+  const oh=p.regularOpeningHours;
+  if(!oh||!oh.periods||!oh.periods.length) return null;
+  const periods=oh.periods;
+  const off=(typeof p.utcOffsetMinutes==='number')?p.utcOffsetMinutes:(-new Date().getTimezoneOffset());
+  const placeNow=new Date(Date.now()+(new Date().getTimezoneOffset()*60000)+off*60000); // wall time at the place
+  const day=placeNow.getUTCDay();
+  const cur=day*1440+placeNow.getUTCHours()*60+placeNow.getUTCMinutes();
+  const pad=n=>String(n).padStart(2,'0');
+  const fmt=t=>pad(t.hour||0)+':'+pad(t.minute||0);
+  let openNow=false, always=false;
+  for(const per of periods){
+    if(per.open&&!per.close){ always=true; break; }
+    if(!per.open||!per.close) continue;
+    let o=per.open.day*1440+(per.open.hour||0)*60+(per.open.minute||0);
+    let c=per.close.day*1440+(per.close.hour||0)*60+(per.close.minute||0);
+    if(c<o) c+=10080;
+    if((cur>=o&&cur<c)||(cur+10080>=o&&cur+10080<c)){ openNow=true; }
+  }
+  if(always) openNow=true;
+  let todayStr='';
+  if(always) todayStr='24h';
+  else{
+    const td=periods.filter(per=>per.open&&per.close&&per.open.day===day);
+    if(td.length) todayStr=td.map(per=>fmt(per.open)+'–'+fmt(per.close)).join(', ');
+  }
+  return { openNow, todayStr };
 }
 
 async function goToPlace(){
@@ -546,7 +606,6 @@ async function goToPlace(){
     }
   }catch(e){ console.error('searchByText error',e); }
 }
-
 function useMyLocation(){
   if(!navigator.geolocation){ alert(L.t.alertNoGeo); return; }
   $('#locBtn').textContent=L.t.locating;
@@ -554,11 +613,10 @@ function useMyLocation(){
     userLocated=true;
     setCenter(new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude),true); map.setZoom(15);
     $('#locBtn').textContent=L.t.myLoc;
-  }, ()=>{ $('#locBtn').textContent=L.t.myLoc; alert(L.t.alertGeoFail); },
-  { enableHighAccuracy:true, timeout:10000 });
+  }, ()=>{ $('#locBtn').textContent=L.t.myLoc; alert(L.t.alertGeoFail); }, { enableHighAccuracy:true, timeout:10000 });
 }
 
-/* ============== search ============== */
+/* ============== search (Venue × Food cross-filter) ============== */
 async function runSearch(){
   const radius=+$('#radius').value, minRev=+$('#minReviews').value||0, minRat=+$('#minRating').value||0;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
@@ -567,12 +625,16 @@ async function runSearch(){
   const { Place, SearchNearbyRankPreference } = await google.maps.importLibrary("places");
   const { spherical } = await google.maps.importLibrary("geometry");
 
-  const cat=L.cats.find(c=>c.id===selectedCat)||L.cats[0];
-  const chunks=chunk(cat.types,4);
+  const venue=venueObj(), food=foodObj();
+  const venueAny=venue.id==='all', foodAny=food.id==='all';
+  // search by cuisine when chosen (more specific), else by venue format
+  const searchTypes = !foodAny ? food.types : venue.types;
+
+  const chunks=chunk(searchTypes,4);
   const seen=new Map(); let failed=0;
   for(const types of chunks){
     const request={
-      fields:['id','displayName','location','rating','userRatingCount','formattedAddress','googleMapsURI','primaryTypeDisplayName','types','priceLevel','businessStatus'],
+      fields:['id','displayName','location','rating','userRatingCount','formattedAddress','googleMapsURI','primaryTypeDisplayName','types','priceLevel','businessStatus','regularOpeningHours','utcOffsetMinutes'],
       locationRestriction:{ center:searchCenter, radius },
       includedTypes:types, maxResultCount:20,
       rankPreference:SearchNearbyRankPreference.POPULARITY, language:L.apiLang,
@@ -580,29 +642,36 @@ async function runSearch(){
     try{ const { places } = await Place.searchNearby(request); (places||[]).forEach(p=>{ if(p.id&&!seen.has(p.id)) seen.set(p.id,p); }); }
     catch(e){ failed++; console.error('searchNearby error',e); }
   }
-  if(failed===chunks.length){
+  if(chunks.length && failed===chunks.length){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
     $('#count').textContent=L.t.errCount; return;
   }
 
-  const results=[...seen.values()]
-    .filter(p=>p.rating!=null&&p.userRatingCount!=null&&p.rating>=minRat&&p.userRatingCount>=minRev&&(p.businessStatus==null||p.businessStatus==='OPERATIONAL'))
-    .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
-  lastResults=results; render(results);
+  let results=[...seen.values()]
+    .filter(p=>p.rating!=null&&p.userRatingCount!=null&&p.rating>=minRat&&p.userRatingCount>=minRev&&(p.businessStatus==null||p.businessStatus==='OPERATIONAL'));
+  // cross filter: searched by cuisine, narrow to chosen venue format
+  if(!foodAny && !venueAny){
+    const vset=new Set(venue.types);
+    results=results.filter(p=>(p.types||[]).some(t=>vset.has(t)));
+  }
+  const mapped=results.map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
+  lastResults=mapped; render(mapped);
 }
 
 function render(results){
-  if(!results.length){
+  const pmax=+$('#price').value;
+  const list = pmax<4 ? results.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; }) : results;
+  if(!list.length){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
-    $('#count').textContent=`${catLabel(selectedCat)} · 0${L.t.doneUnit}`; clearMarkers(); return;
+    $('#count').textContent=`${currentLabel()} · 0${L.t.doneUnit}`; clearMarkers(); return;
   }
-  const sorted=[...results].sort((a,b)=>{
+  const sorted=[...list].sort((a,b)=>{
     if(sortMode==='dist') return a.dist-b.dist;
     if(sortMode==='reviews') return b.p.userRatingCount-a.p.userRatingCount;
     if(b.p.rating!==a.p.rating) return b.p.rating-a.p.rating;
     return b.p.userRatingCount-a.p.userRatingCount;
   });
-  $('#count').textContent=`${catLabel(selectedCat)} · ${sorted.length}${L.t.doneUnit}`;
+  $('#count').textContent=`${currentLabel()} · ${sorted.length}${L.t.doneUnit}`;
   drawMarkers(sorted);
   $('#results').innerHTML=sorted.map((r,i)=>cardHTML(r,i+1)).join('');
   document.querySelectorAll('.card').forEach((el,i)=>el.addEventListener('click',e=>{ if(e.target.closest('a')) return; focusResult(i); }));
@@ -620,6 +689,13 @@ function cardHTML(r,rank){
   const addr=esc(p.formattedAddress||'');
   const link=p.googleMapsURI||('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name));
   const ribbon=(p.rating>=4.6&&p.userRatingCount>=1000)?`<span class="ribbon">${esc(L.t.mustEat)}</span>`:'';
+  const hi=hoursInfo(p);
+  let hoursHtml='';
+  if(hi){
+    const badge=hi.openNow?`<span class="open">${esc(L.t.hrOpen)}</span>`:`<span class="closed">${esc(L.t.hrClosed)}</span>`;
+    const txt=hi.todayStr?esc(hi.todayStr):(hi.openNow?'':esc(L.t.hrClosedToday));
+    hoursHtml=`<div class="hours">${badge}${txt?' '+txt:''}</div>`;
+  }
   return `<div class="card" style="--i:${rank-1}">
     <div class="rank">${rank}</div>
     <div class="body">
@@ -631,7 +707,7 @@ function cardHTML(r,rank){
         ${typeLabel?`<span class="pill">${esc(typeLabel)}</span>`:''}
         ${price?`<span class="pill">${price}</span>`:''}
       </div>
-      ${addr?`<p class="addr" title="${addr}">${addr}</p>`:''}
+      ${hoursHtml}${addr?`<p class="addr" title="${addr}">${addr}</p>`:''}
       <a class="gmlink" href="${link}" target="_blank" rel="noopener">${esc(L.t.openMap)}</a>
     </div>
   </div>`;
@@ -656,7 +732,6 @@ function focusResult(i){
   const mk=resultMarkers[i];
   if(mk){ const el=mk.content; if(el){ el.classList.remove('active'); void el.offsetWidth; el.classList.add('active'); } map.panTo(mk.position); if(map.getZoom()<15) map.setZoom(16); }
 }
-
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function star(){ return `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.3 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg>`; }
 </script>
