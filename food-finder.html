@@ -58,7 +58,7 @@
   button.ghost:hover{background:var(--warm);border-color:var(--tangerine);box-shadow:none}
   button.ghost.on{background:var(--persimmon);color:#fff;border-color:var(--persimmon)}
 
-  .controls{display:flex;gap:18px 26px;flex-wrap:wrap;align-items:flex-end;padding:16px 24px 14px;border-bottom:1px solid var(--line);background:var(--paper)}
+  .controls{display:flex;gap:16px 26px;flex-wrap:wrap;align-items:flex-end;padding:13px 24px 11px;border-bottom:1px solid var(--line);background:var(--paper)}
   .field{display:flex;flex-direction:column;gap:5px}
   .field label{font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;font-family:"Fraunces",serif;font-weight:600}
   .field .val{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon)}
@@ -68,7 +68,7 @@
   .grow{flex:1}
   .searchbtn{padding:11px 28px;font-size:15px;font-weight:700}
 
-  .catbar{display:flex;align-items:flex-start;gap:14px;padding:13px 24px;border-bottom:1px solid var(--line);background:var(--warm)}
+  .catbar{display:flex;align-items:flex-start;gap:14px;padding:10px 24px;border-bottom:1px solid var(--line);background:var(--warm)}
   .catbar.top{border-bottom:none;padding-bottom:6px}
   .catbar.bot{padding-top:6px}
   .catlabel{font-family:"Fraunces",serif;font-weight:700;font-size:14.5px;white-space:nowrap;padding-top:6px;min-width:62px}
@@ -79,12 +79,12 @@
   .chip.onv{background:var(--herb);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(94,140,74,.3)}
   .chip.onf{background:var(--flame);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(232,85,42,.3)}
 
-  .smartbar{display:flex;gap:10px;align-items:center;padding:13px 24px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--paper),var(--warm))}
-  .smartbar .lbl{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon);font-size:14px;white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .smartbar{display:flex;gap:12px;align-items:center;padding:13px 24px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,var(--warm))}
+  .smartbar .lbl{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon);font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:6px}
   .smartbar .spark{animation:twinkle 2.2s ease-in-out infinite}
   @keyframes twinkle{0%,100%{opacity:.45;transform:scale(.9)}50%{opacity:1;transform:scale(1.18)}}
-  .smartbar input{flex:1;min-width:0}
-  .smartbar button{white-space:nowrap;padding:10px 22px}
+  .smartbar input{flex:1;min-width:0;padding:11px 14px;font-size:15px}
+  .smartbar button{white-space:nowrap;padding:11px 24px;font-size:15px}
   .why{margin-top:8px;font-size:12.5px;color:var(--herb-dark);line-height:1.55;background:rgba(94,140,74,.09);border-left:3px solid var(--herb);padding:6px 11px;border-radius:0 8px 8px 0}
   .why .sp{color:var(--persimmon);font-weight:700;margin-right:5px}
   main{flex:1;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(330px,1fr);min-height:0}
@@ -161,11 +161,21 @@
   .err{color:var(--chili);font-size:13px;margin-top:10px}
 
   @media (max-width:860px){
-    main{grid-template-columns:1fr;grid-template-rows:42vh auto}
+    main{grid-template-columns:1fr;grid-template-rows:40vh auto}
     .panel{border-left:none;border-top:1px solid var(--line)}
     #map{min-height:0}
     h1{font-size:24px}
-    input[type=range]{width:130px}
+    input[type=range]{width:120px}
+    .controls{gap:10px 16px;padding:11px 16px}
+    .field label{font-size:10.5px}
+    .smartbar{padding:11px 16px;gap:8px}
+    .smartbar .lbl{font-size:13px}
+    .smartbar button{padding:11px 18px}
+    .catbar{padding:8px 16px;gap:10px}
+    .catlabel{padding-top:8px;min-width:46px}
+    .chips{flex:1;min-width:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex:none}
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -201,11 +211,6 @@
       <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
       <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
     </div>
-    <div class="field"><label><span id="minRevLabel"></span> <span class="val" id="revVal"></span></label><input type="range" id="minReviews" min="0" max="1000" step="50" value="300" style="width:130px"></div>
-    <div class="field"><label><span id="minRatLabel"></span> <span class="val" id="ratVal"></span></label><input type="range" id="minRating" min="3" max="5" step="0.1" value="4.0" style="width:120px"></div>
-    <div class="field"><label><span id="priceLabel"></span> <span class="val" id="priceVal"></span></label><input type="range" id="price" min="1" max="4" step="1" value="4" style="width:130px"></div>
-    <div class="field grow"></div>
-    <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
   </div>
 
   <div class="smartbar">
@@ -221,6 +226,14 @@
   <div class="catbar bot">
     <span class="catlabel f" id="foodlabel"></span>
     <div class="chips" id="foodChips"></div>
+  </div>
+
+  <div class="controls">
+    <div class="field"><label><span id="minRevLabel"></span> <span class="val" id="revVal"></span></label><input type="range" id="minReviews" min="0" max="1000" step="50" value="300" style="width:130px"></div>
+    <div class="field"><label><span id="minRatLabel"></span> <span class="val" id="ratVal"></span></label><input type="range" id="minRating" min="3" max="5" step="0.1" value="4.0" style="width:120px"></div>
+    <div class="field"><label><span id="priceLabel"></span> <span class="val" id="priceVal"></span></label><input type="range" id="price" min="1" max="4" step="1" value="4" style="width:130px"></div>
+    <div class="field grow"></div>
+    <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
   </div>
 
   <main>
@@ -463,6 +476,8 @@ let region='tw', L=LOCALES.tw;
 let map, centerMarker, searchCircle, searchCenter;
 let resultMarkers=[], lastResults=[];
 let sortMode=localStorage.getItem('ff_sort')||'rating';
+let userSorted=false;
+let scrollAfterRender=false;
 let selectedCat='all', selectedFood='all';
 let pinMode=false, userLocated=false;
 let mode='cat', nameQuery='';
@@ -586,6 +601,7 @@ async function initApp(){
     if(b.dataset.sort===sortMode){ document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); }
     b.addEventListener('click',()=>{
       sortMode=b.dataset.sort; localStorage.setItem('ff_sort',sortMode);
+      userSorted=true;
       document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
       if(lastResults.length) rerender();
     });
@@ -683,7 +699,7 @@ function useMyLocation(){
 
 /* ============== search (Venue × Food cross-filter) ============== */
 async function runSearch(){
-  mode='cat';
+  mode='cat'; userSorted=false; scrollAfterRender=true;
   const radius=+$('#radius').value;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
@@ -726,7 +742,7 @@ async function runSearch(){
 
 async function runTextSearch(q){
   if(!q) return;
-  mode='name'; nameQuery=q;
+  mode='name'; nameQuery=q; userSorted=false; scrollAfterRender=true;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
   const { Place } = await google.maps.importLibrary("places");
@@ -752,7 +768,7 @@ function nameSearch(){ runTextSearch($('#nameInput').value.trim()); }
 
 async function describeSearch(){
   const q=$('#aiInput').value.trim(); if(!q) return;
-  mode='name'; nameQuery=q;
+  mode='name'; nameQuery=q; userSorted=false; scrollAfterRender=true;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.aiThinking)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
   const { Place } = await google.maps.importLibrary("places");
@@ -801,6 +817,11 @@ async function describeSearch(){
 }
 
 function rerender(){ if(lastResults.length) render(lastResults, mode==='name'); }
+function syncSortButtons(){
+  const btns=document.querySelectorAll('.sort button');
+  if(mode==='name' && !userSorted){ btns.forEach(x=>x.classList.remove('on')); return; }
+  btns.forEach(x=>x.classList.toggle('on', x.dataset.sort===sortMode));
+}
 function bumpCount(){ const c=$('#count'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
 
 function render(results, bypass){
@@ -816,18 +837,27 @@ function render(results, bypass){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
     $('#count').textContent=`${label} · 0${L.t.doneUnit}`; bumpCount(); clearMarkers(); return;
   }
-  const sorted = bypass ? list : [...list].sort((a,b)=>{
+  const sorted = (bypass && !userSorted) ? list : [...list].sort((a,b)=>{
     if(sortMode==='dist') return a.dist-b.dist;
-    if(sortMode==='reviews') return b.p.userRatingCount-a.p.userRatingCount;
-    if(b.p.rating!==a.p.rating) return b.p.rating-a.p.rating;
-    return b.p.userRatingCount-a.p.userRatingCount;
+    if(sortMode==='reviews') return (b.p.userRatingCount||0)-(a.p.userRatingCount||0);
+    const rd=(b.p.rating||0)-(a.p.rating||0);
+    if(rd!==0) return rd;
+    return (b.p.userRatingCount||0)-(a.p.userRatingCount||0);
   });
+  syncSortButtons();
   $('#count').textContent=`${label} · ${sorted.length}${L.t.doneUnit}`; bumpCount();
   drawMarkers(sorted);
   $('#results').innerHTML=sorted.map((r,i)=>cardHTML(r,i+1)).join('');
   document.querySelectorAll('.card').forEach((el,i)=>el.addEventListener('click',e=>{ if(e.target.closest('a')) return; focusResult(i); }));
   const bounds=new google.maps.LatLngBounds(); bounds.extend(searchCenter);
   sorted.forEach(r=>bounds.extend(r.p.location)); map.fitBounds(bounds,60);
+  if(scrollAfterRender){
+    scrollAfterRender=false;
+    if(window.matchMedia('(max-width:860px)').matches){
+      const pn=document.querySelector('.panel');
+      if(pn) setTimeout(()=>pn.scrollIntoView({behavior:'smooth',block:'start'}),120);
+    }
+  }
 }
 
 function heat(r){ return r>=4.7?'hot':r>=4.4?'warm':'mild'; }
