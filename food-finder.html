@@ -79,6 +79,14 @@
   .chip.onv{background:var(--herb);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(94,140,74,.3)}
   .chip.onf{background:var(--flame);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(232,85,42,.3)}
 
+  .smartbar{display:flex;gap:10px;align-items:center;padding:13px 24px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--paper),var(--warm))}
+  .smartbar .lbl{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon);font-size:14px;white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .smartbar .spark{animation:twinkle 2.2s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.45;transform:scale(.9)}50%{opacity:1;transform:scale(1.18)}}
+  .smartbar input{flex:1;min-width:0}
+  .smartbar button{white-space:nowrap;padding:10px 22px}
+  .why{margin-top:8px;font-size:12.5px;color:var(--herb-dark);line-height:1.55;background:rgba(94,140,74,.09);border-left:3px solid var(--herb);padding:6px 11px;border-radius:0 8px 8px 0}
+  .why .sp{color:var(--persimmon);font-weight:700;margin-right:5px}
   main{flex:1;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(330px,1fr);min-height:0}
   #map{width:100%;height:100%;min-height:360px;background:var(--warm)}
   .panel{display:flex;flex-direction:column;border-left:1px solid var(--line);background:var(--cream);min-height:0}
@@ -126,6 +134,28 @@
   .ctr{width:20px;height:20px;border-radius:50%;background:var(--herb);border:3px solid #fff;box-shadow:0 0 0 5px rgba(94,140,74,.28),0 2px 6px rgba(0,0,0,.25);cursor:grab;animation:beat 2s ease-in-out infinite}
   @keyframes beat{0%,100%{box-shadow:0 0 0 5px rgba(94,140,74,.28),0 2px 6px rgba(0,0,0,.25)}50%{box-shadow:0 0 0 11px rgba(94,140,74,0),0 2px 6px rgba(0,0,0,.25)}}
 
+  /* ---- fun / dynamic touches ---- */
+  .bowl{display:block;margin:0 auto 16px}
+  .bowl path.s1,.bowl path.s2,.bowl path.s3{transform-box:fill-box;transform-origin:center;animation:steam 2.6s ease-in-out infinite}
+  .bowl path.s2{animation-delay:.6s}
+  .bowl path.s3{animation-delay:1.15s}
+  @keyframes steam{0%{opacity:0;transform:translateY(5px) scaleY(.85)}35%{opacity:.85}100%{opacity:0;transform:translateY(-13px) scaleY(1.1)}}
+  .pin{animation:drop .45s cubic-bezier(.2,.8,.3,1.4) both;animation-delay:calc(var(--mi,0)*55ms)}
+  @keyframes drop{from{opacity:0;transform:translateY(-18px) scale(.55)}to{opacity:1;transform:none}}
+  .stars.hot{animation:glow 1.9s ease-in-out infinite}
+  @keyframes glow{0%,100%{text-shadow:0 0 0 rgba(200,52,26,0)}50%{text-shadow:0 0 9px rgba(200,52,26,.5)}}
+  .ribbon{position:relative;overflow:hidden}
+  .ribbon::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.65),transparent);animation:shine 2.8s ease-in-out infinite}
+  @keyframes shine{0%{left:-70%}45%,100%{left:165%}}
+  .hours .open .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;margin-right:5px;vertical-align:1px;animation:livedot 1.4s ease-in-out infinite}
+  @keyframes livedot{0%,100%{opacity:1}50%{opacity:.4}}
+  .count.bump{animation:bump .42s cubic-bezier(.2,.8,.3,1.3)}
+  @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+  .card:hover .rank{animation:wobble .55s ease}
+  @keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}60%{transform:rotate(7deg)}}
+  .searchbtn{position:relative;overflow:hidden}
+  .searchbtn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 3.8s ease-in-out infinite}
+  .chip:active{transform:scale(.94)}
   .note{font-size:12px;color:var(--ink-soft);padding:11px 20px;border-top:1px solid var(--line);background:var(--paper);line-height:1.6}
   .hidden{display:none!important}
   .err{color:var(--chili);font-size:13px;margin-top:10px}
@@ -178,6 +208,12 @@
     <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
   </div>
 
+  <div class="smartbar">
+    <span class="lbl"><span class="spark">✦</span> <span id="aiLbl"></span></span>
+    <input type="text" id="aiInput" autocomplete="off">
+    <button id="aiGo"></button>
+  </div>
+
   <div class="catbar top">
     <span class="catlabel v" id="venuelabel"></span>
     <div class="chips" id="chips"></div>
@@ -206,6 +242,16 @@
 
 <script>
 const $ = s => document.querySelector(s);
+const BOWL = `<svg class="bowl" viewBox="0 0 120 110" width="98" height="90" aria-hidden="true">
+  <g stroke-linecap="round" fill="none">
+    <path class="s1" d="M44 40 q8 -7 0 -15 q-8 -8 0 -16" stroke="#e8855a" stroke-width="3"/>
+    <path class="s2" d="M60 38 q8 -7 0 -15 q-8 -8 0 -16" stroke="#ef9a5c" stroke-width="3"/>
+    <path class="s3" d="M76 40 q8 -7 0 -15 q-8 -8 0 -16" stroke="#e8855a" stroke-width="3"/>
+  </g>
+  <ellipse cx="60" cy="60" rx="40" ry="9" fill="none" stroke="#b3704a" stroke-width="3.5"/>
+  <path d="M22 61 q38 46 76 0" fill="none" stroke="#b3704a" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M42 98 h36" stroke="#b3704a" stroke-width="3.5" stroke-linecap="round"/>
+</svg>`;
 
 /* ============== LOCALES (cats = venue/format, foods = cuisine) ============== */
 const LOCALES = {
@@ -226,6 +272,8 @@ const LOCALES = {
       centerLabel:'搜尋中心', myLoc:'我的位置', locating:'定位中…', pickMap:'點地圖選點',
       goLabel:'前往地點', goPh:'例如：信義區',
       nameLabel:'店名搜尋', namePh:'例如：滇味小廚', noRating:'無評分',
+      aiLbl:'描述配對', aiPh:'用一句話描述：口味、型式、環境、氣氛、地點… 例如「安靜有質感、適合約會的日式，大安區」', aiGo:'配對',
+      aiThinking:'AI 配對中…正在分析你的描述',
       radiusLabel:'搜尋半徑', minRev:'評論數 ≥', minRat:'評分 ≥', searchBtn:'搜尋此範圍',
       venueLabel:'店家', foodLabel:'食物', sRating:'評分', sPop:'人氣', sDist:'距離',
       priceLabel:'價位', priceAny:'不限',
@@ -292,6 +340,8 @@ const LOCALES = {
       centerLabel:'Search center', myLoc:'My location', locating:'Locating…', pickMap:'Pick on map',
       goLabel:'Go to place', goPh:'e.g. Urbana, IL',
       nameLabel:'Search by name', namePh:'e.g. Joe’s Pizza', noRating:'No rating',
+      aiLbl:'Describe & match', aiPh:'Describe it — cuisine, style, vibe, area… e.g. “quiet upscale Japanese, good for a date, downtown”', aiGo:'Match',
+      aiThinking:'Matching with AI… analyzing your request',
       radiusLabel:'Radius', minRev:'Reviews ≥', minRat:'Rating ≥', searchBtn:'Search this area',
       venueLabel:'Place', foodLabel:'Food', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
       priceLabel:'Price', priceAny:'Any',
@@ -357,6 +407,8 @@ const LOCALES = {
       centerLabel:'検索の中心', myLoc:'現在地', locating:'位置取得中…', pickMap:'地図で指定',
       goLabel:'場所へ移動', goPh:'例：渋谷',
       nameLabel:'店名で検索', namePh:'例：一蘭', noRating:'評価なし',
+      aiLbl:'説明でマッチ', aiPh:'一言で：料理・形式・雰囲気・エリア… 例「静かで上質、デート向きの和食、渋谷」', aiGo:'マッチ',
+      aiThinking:'AI マッチング中…説明を分析しています',
       radiusLabel:'検索半径', minRev:'レビュー数 ≥', minRat:'評価 ≥', searchBtn:'この範囲を検索',
       venueLabel:'お店', foodLabel:'料理', sRating:'評価', sPop:'人気', sDist:'距離',
       priceLabel:'価格', priceAny:'指定なし',
@@ -437,6 +489,7 @@ function applyLocale(){
   $('#centerLabel').textContent=t.centerLabel;
   $('#goLabel').textContent=t.goLabel; $('#goInput').placeholder=t.goPh;
   $('#nameLabel').textContent=t.nameLabel; $('#nameInput').placeholder=t.namePh;
+  $('#aiLbl').textContent=t.aiLbl; $('#aiInput').placeholder=t.aiPh; $('#aiGo').textContent=t.aiGo;
   $('#locBtn').textContent=t.myLoc; $('#pinBtn').textContent=t.pickMap;
   $('#radiusLabel').textContent=t.radiusLabel;
   $('#minRevLabel').textContent=t.minRev; $('#minRatLabel').textContent=t.minRat;
@@ -466,7 +519,7 @@ function setRegion(r){
   }
 }
 function showInitial(){
-  $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.initBig)}</span>${esc(L.t.initText)}</div>`;
+  $('#results').innerHTML=`<div class="empty">${BOWL}<span class="big">${esc(L.t.initBig)}</span>${esc(L.t.initText)}</div>`;
   $('#count').textContent=L.t.initCount;
 }
 
@@ -527,6 +580,8 @@ async function initApp(){
   $('#pinBtn').addEventListener('click', ()=>{ pinMode=!pinMode; $('#pinBtn').classList.toggle('on',pinMode); });
   $('#goInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); goToPlace(); } });
   $('#nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); nameSearch(); } });
+  $('#aiGo').addEventListener('click', describeSearch);
+  $('#aiInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); describeSearch(); } });
   document.querySelectorAll('.sort button').forEach(b=>{
     if(b.dataset.sort===sortMode){ document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); }
     b.addEventListener('click',()=>{
@@ -669,8 +724,8 @@ async function runSearch(){
   lastResults=mapped; render(mapped);
 }
 
-async function nameSearch(){
-  const q=$('#nameInput').value.trim(); if(!q) return;
+async function runTextSearch(q){
+  if(!q) return;
   mode='name'; nameQuery=q;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
@@ -688,13 +743,65 @@ async function nameSearch(){
       .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
     lastResults=mapped; render(mapped, true);
   }catch(e){
-    console.error('name search error',e);
+    console.error('text search error',e);
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
     $('#count').textContent=L.t.errCount;
   }
 }
+function nameSearch(){ runTextSearch($('#nameInput').value.trim()); }
+
+async function describeSearch(){
+  const q=$('#aiInput').value.trim(); if(!q) return;
+  mode='name'; nameQuery=q;
+  $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.aiThinking)}</div>`;
+  $('#count').textContent=L.t.searching; clearMarkers();
+  const { Place } = await google.maps.importLibrary("places");
+  const { spherical } = await google.maps.importLibrary("geometry");
+  const radius=+$('#radius').value;
+  let cands=[];
+  try{
+    const { places } = await Place.searchByText({
+      textQuery:q,
+      fields:['id','displayName','location','rating','userRatingCount','formattedAddress','googleMapsURI','primaryTypeDisplayName','types','priceLevel','businessStatus','regularOpeningHours','utcOffsetMinutes'],
+      locationBias:{ center:searchCenter, radius },
+      maxResultCount:20, language:L.apiLang,
+    });
+    cands=(places||[]).filter(p=>p.location && p.businessStatus!=='CLOSED_PERMANENTLY')
+      .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
+  }catch(e){
+    console.error('candidate search error',e);
+    $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
+    $('#count').textContent=L.t.errCount; return;
+  }
+  if(!cands.length){ render([], true); return; }
+  // ask the AI function to rank + explain
+  try{
+    const payload={ description:q, lang:L.apiLang, places:cands.map((c,i)=>({
+      i,
+      name:(typeof c.p.displayName==='string'?c.p.displayName:(c.p.displayName?.text||'')),
+      primaryType:typeName(c.p)||((c.p.types||[])[0]||''),
+      price:c.p.priceLevel?(PRICE[c.p.priceLevel]||''):'',
+      rating:(c.p.rating!=null?c.p.rating:null),
+      reviews:(c.p.userRatingCount!=null?c.p.userRatingCount:0),
+      address:c.p.formattedAddress||'',
+    })) };
+    const res=await fetch('/.netlify/functions/match',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    if(res.ok){
+      const data=await res.json();
+      const matches=Array.isArray(data.matches)?data.matches:[];
+      if(matches.length){
+        const seen=new Set();
+        const ranked=matches.map(m=>{ if(seen.has(m.i)) return null; seen.add(m.i); const c=cands[m.i]; if(c) c.reason=m.reason; return c; }).filter(Boolean);
+        if(ranked.length){ lastResults=ranked; render(ranked, true); return; }
+      }
+    }
+  }catch(e){ console.error('ai match error',e); }
+  // fallback: plain relevance order (function not deployed / errored)
+  lastResults=cands; render(cands, true);
+}
 
 function rerender(){ if(lastResults.length) render(lastResults, mode==='name'); }
+function bumpCount(){ const c=$('#count'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
 
 function render(results, bypass){
   let list;
@@ -704,10 +811,10 @@ function render(results, bypass){
     list=results.filter(r=>r.p.rating>=minRat && r.p.userRatingCount>=minRev);
     if(pmax<4) list=list.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; });
   }
-  const label = bypass ? ('“'+nameQuery+'”') : currentLabel();
+  const label = bypass ? ('“'+(nameQuery.length>22?nameQuery.slice(0,22)+'…':nameQuery)+'”') : currentLabel();
   if(!list.length){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
-    $('#count').textContent=`${label} · 0${L.t.doneUnit}`; clearMarkers(); return;
+    $('#count').textContent=`${label} · 0${L.t.doneUnit}`; bumpCount(); clearMarkers(); return;
   }
   const sorted = bypass ? list : [...list].sort((a,b)=>{
     if(sortMode==='dist') return a.dist-b.dist;
@@ -715,7 +822,7 @@ function render(results, bypass){
     if(b.p.rating!==a.p.rating) return b.p.rating-a.p.rating;
     return b.p.userRatingCount-a.p.userRatingCount;
   });
-  $('#count').textContent=`${label} · ${sorted.length}${L.t.doneUnit}`;
+  $('#count').textContent=`${label} · ${sorted.length}${L.t.doneUnit}`; bumpCount();
   drawMarkers(sorted);
   $('#results').innerHTML=sorted.map((r,i)=>cardHTML(r,i+1)).join('');
   document.querySelectorAll('.card').forEach((el,i)=>el.addEventListener('click',e=>{ if(e.target.closest('a')) return; focusResult(i); }));
@@ -739,10 +846,11 @@ function cardHTML(r,rank){
   const hi=hoursInfo(p);
   let hoursHtml='';
   if(hi){
-    const badge=hi.openNow?`<span class="open">${esc(L.t.hrOpen)}</span>`:`<span class="closed">${esc(L.t.hrClosed)}</span>`;
+    const badge=hi.openNow?`<span class="open"><i class="dot"></i>${esc(L.t.hrOpen)}</span>`:`<span class="closed">${esc(L.t.hrClosed)}</span>`;
     const txt=hi.todayStr?esc(hi.todayStr):(hi.openNow?'':esc(L.t.hrClosedToday));
     hoursHtml=`<div class="hours">${badge}${txt?' '+txt:''}</div>`;
   }
+  const whyHtml = r.reason ? `<div class="why"><span class="sp">✦</span>${esc(r.reason)}</div>` : '';
   return `<div class="card" style="--i:${rank-1}">
     <div class="rank">${rank}</div>
     <div class="body">
@@ -753,7 +861,7 @@ function cardHTML(r,rank){
         ${typeLabel?`<span class="pill">${esc(typeLabel)}</span>`:''}
         ${price?`<span class="pill">${price}</span>`:''}
       </div>
-      ${hoursHtml}${addr?`<p class="addr" title="${addr}">${addr}</p>`:''}
+      ${whyHtml}${hoursHtml}${addr?`<p class="addr" title="${addr}">${addr}</p>`:''}
       <a class="gmlink" href="${link}" target="_blank" rel="noopener">${esc(L.t.openMap)}</a>
     </div>
   </div>`;
@@ -766,6 +874,7 @@ async function drawMarkers(sorted){
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
   sorted.forEach((r,i)=>{
     const el=document.createElement('div'); el.className='pin'; el.innerHTML=`<span>${i+1}</span>`;
+    el.style.setProperty('--mi', Math.min(i,12));
     const mk=new AdvancedMarkerElement({ map, position:r.p.location, content:el });
     mk.addListener('click',()=>focusResult(i));
     resultMarkers.push(mk);
