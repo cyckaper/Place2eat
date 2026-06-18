@@ -1,8 +1,13 @@
-# Netlify deploy config for 口碑覓食
-# 1. In Netlify: Site configuration → Environment variables → add  GOOGLE_MAPS_KEY = <your key>
-# 2. Connect this folder via Git (or "Deploy manually" won't run the build — see note below).
-# On each deploy, the build command swaps your key into the page; the source file never holds it.
+# Netlify deploy config for Place2Eat
+# Env vars to set in Netlify (Site configuration → Environment variables):
+#   GOOGLE_MAPS_KEY        – your Google Maps key (injected into the page at build)
+#   ANTHROPIC_API_KEY      – your Anthropic API key (used ONLY server-side by the function; mark as secret)
+# The build command swaps GOOGLE_MAPS_KEY into the page; the source file never holds it.
 
 [build]
   publish = "dist"
   command = "mkdir -p dist && sed \"s|%%GOOGLE_MAPS_KEY%%|$GOOGLE_MAPS_KEY|g\" food-finder.html > dist/index.html"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
