@@ -169,6 +169,10 @@
       </div>
     </div>
     <div class="field">
+      <label id="goLabel"></label>
+      <input type="text" id="goInput" style="width:180px" autocomplete="off">
+    </div>
+    <div class="field">
       <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
       <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
     </div>
@@ -220,6 +224,7 @@ const LOCALES = {
       keyPh:'貼上 API 金鑰…', keyGo:'開始',
       errEmpty:'請先貼上金鑰。', errLoad:'地圖載入失敗，請確認金鑰與已啟用的 API。',
       centerLabel:'搜尋中心', myLoc:'我的位置', locating:'定位中…', pickMap:'點地圖選點',
+      goLabel:'前往地點', goPh:'例如：信義區',
       radiusLabel:'搜尋半徑', minRev:'評論數 ≥', minRat:'評分 ≥', searchBtn:'搜尋此範圍',
       findLabel:'找哪種店', sRating:'評分', sPop:'人氣', sDist:'距離',
       initCount:'挑一種就開動',
@@ -265,6 +270,7 @@ const LOCALES = {
       keyPh:'Paste API key…', keyGo:'Start',
       errEmpty:'Please paste a key first.', errLoad:'Map failed to load. Check the key and enabled APIs.',
       centerLabel:'Search center', myLoc:'My location', locating:'Locating…', pickMap:'Pick on map',
+      goLabel:'Go to place', goPh:'e.g. Urbana, IL',
       radiusLabel:'Radius', minRev:'Reviews ≥', minRat:'Rating ≥', searchBtn:'Search this area',
       findLabel:'What kind of place', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
       initCount:'Pick one to start',
@@ -311,6 +317,7 @@ const LOCALES = {
       keyPh:'API キーを貼り付け…', keyGo:'開始',
       errEmpty:'先にキーを貼り付けてください。', errLoad:'地図の読み込みに失敗しました。キーと有効な API を確認してください。',
       centerLabel:'検索の中心', myLoc:'現在地', locating:'位置取得中…', pickMap:'地図で指定',
+      goLabel:'場所へ移動', goPh:'例：渋谷',
       radiusLabel:'検索半径', minRev:'レビュー数 ≥', minRat:'評価 ≥', searchBtn:'この範囲を検索',
       findLabel:'お店の種類', sRating:'評価', sPop:'人気', sDist:'距離',
       initCount:'種類を選んでスタート',
@@ -367,6 +374,7 @@ function applyLocale(){
   $('#gateLi1').textContent=t.gateLi1; $('#gateLi2').textContent=t.gateLi2;
   $('#keyInput').placeholder=t.keyPh; $('#keyGo').textContent=t.keyGo;
   $('#centerLabel').textContent=t.centerLabel;
+  $('#goLabel').textContent=t.goLabel; $('#goInput').placeholder=t.goPh;
   $('#locBtn').textContent=t.myLoc; $('#pinBtn').textContent=t.pickMap;
   $('#radiusLabel').textContent=t.radiusLabel;
   $('#minRevLabel').textContent=t.minRev; $('#minRatLabel').textContent=t.minRat;
@@ -383,13 +391,16 @@ function applyLocale(){
 
 function setRegion(r){
   if(!LOCALES[r]) r='tw';
+  if(r===region && map) return;
   region=r; L=LOCALES[r]; selectedCat=L.cats[0].id;
   localStorage.setItem('ff_region',r);
   if(history.replaceState) history.replaceState(null,'','#'+r);
   applyLocale();
   if(map){
     if(searchCircle) searchCircle.setRadius(+$('#radius').value);
-    if(!userLocated){ setCenter(new google.maps.LatLng(L.fallback.lat,L.fallback.lng),true); }
+    setCenter(new google.maps.LatLng(L.fallback.lat,L.fallback.lng),true);
+    map.setZoom(12);
+    userLocated=true;   // explicit region choice; don't let async geolocation override it
     renderChips();
     showInitial();
     clearMarkers();
@@ -472,6 +483,7 @@ async function initApp(){
   $('#searchBtn').addEventListener('click', runSearch);
   $('#locBtn').addEventListener('click', useMyLocation);
   $('#pinBtn').addEventListener('click', ()=>{ pinMode=!pinMode; $('#pinBtn').classList.toggle('on',pinMode); });
+  $('#goInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); goToPlace(); } });
   document.querySelectorAll('.sort button').forEach(b=>{
     if(b.dataset.sort===sortMode){ document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); }
     b.addEventListener('click',()=>{
@@ -489,6 +501,7 @@ async function initApp(){
 function silentGeolocate(){
   if(!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos=>{
+    if(userLocated) return;   // user already picked a point or chose a region — don't yank the map
     userLocated=true;
     setCenter(new google.maps.LatLng(pos.coords.latitude,pos.coords.longitude),true); map.setZoom(15);
   }, ()=>{}, { enableHighAccuracy:true, timeout:8000 });
@@ -519,6 +532,19 @@ function updateRadLabel(){
 function distFmt(m){
   if(L.unit==='mi'){ return m<160 ? Math.round(m*3.281)+' ft' : (m/1609.34).toFixed(1)+' mi'; }
   return m<1000 ? Math.round(m)+L.nearSuffix : (m/1000).toFixed(1)+L.farSuffix;
+}
+
+async function goToPlace(){
+  const q=$('#goInput').value.trim(); if(!q) return;
+  const { Place } = await google.maps.importLibrary("places");
+  try{
+    const { places } = await Place.searchByText({ textQuery:q, fields:['location','viewport','displayName'], maxResultCount:1, language:L.apiLang });
+    if(places&&places[0]){
+      const pl=places[0]; userLocated=true;
+      setCenter(toLatLng(pl.location), false);
+      if(pl.viewport) map.fitBounds(pl.viewport); else { map.panTo(searchCenter); map.setZoom(14); }
+    }
+  }catch(e){ console.error('searchByText error',e); }
 }
 
 function useMyLocation(){
