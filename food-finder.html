@@ -170,8 +170,8 @@
       <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
       <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
     </div>
-    <div class="field"><label id="minRevLabel"></label><input type="number" class="num" id="minReviews" min="0" step="50" value="300"></div>
-    <div class="field"><label id="minRatLabel"></label><input type="number" class="num" id="minRating" min="0" max="5" step="0.1" value="4.0"></div>
+    <div class="field"><label><span id="minRevLabel"></span> <span class="val" id="revVal"></span></label><input type="range" id="minReviews" min="0" max="1000" step="50" value="300" style="width:130px"></div>
+    <div class="field"><label><span id="minRatLabel"></span> <span class="val" id="ratVal"></span></label><input type="range" id="minRating" min="3" max="5" step="0.1" value="4.0" style="width:120px"></div>
     <div class="field"><label><span id="priceLabel"></span> <span class="val" id="priceVal"></span></label><input type="range" id="price" min="1" max="4" step="1" value="4" style="width:130px"></div>
     <div class="field grow"></div>
     <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
@@ -442,7 +442,7 @@ function applyLocale(){
   document.querySelectorAll('.region button').forEach(b=>b.classList.toggle('on',b.dataset.region===region));
   const r=L.rad, el=$('#radius'); el.min=r.min; el.max=r.max; el.step=r.step;
   if(+el.value<r.min||+el.value>r.max) el.value=r.def;
-  updateRadLabel(); updatePriceLabel();
+  updateRadLabel(); updatePriceLabel(); updateRevLabel(); updateRatLabel();
 }
 function setRegion(r){
   if(!LOCALES[r]) r='tw';
@@ -512,8 +512,8 @@ async function initApp(){
   map.addListener('click', e=>{ if(pinMode){ userLocated=true; setCenter(e.latLng,true); pinMode=false; $('#pinBtn').classList.remove('on'); }});
 
   $('#radius').addEventListener('input', ()=>{ updateRadLabel(); searchCircle.setRadius(+$('#radius').value); });
-  $('#minReviews').addEventListener('change', ()=>localStorage.setItem('ff_rev',$('#minReviews').value));
-  $('#minRating').addEventListener('change', ()=>localStorage.setItem('ff_rat',$('#minRating').value));
+  $('#minReviews').addEventListener('input', ()=>{ updateRevLabel(); localStorage.setItem('ff_rev',$('#minReviews').value); if(lastResults.length) render(lastResults); });
+  $('#minRating').addEventListener('input', ()=>{ updateRatLabel(); localStorage.setItem('ff_rat',$('#minRating').value); if(lastResults.length) render(lastResults); });
   $('#price').addEventListener('input', ()=>{ updatePriceLabel(); localStorage.setItem('ff_price',$('#price').value); if(lastResults.length) render(lastResults); });
   $('#searchBtn').addEventListener('click', runSearch);
   $('#locBtn').addEventListener('click', useMyLocation);
@@ -563,6 +563,8 @@ function updatePriceLabel(){
   if(v>=4){ $('#priceVal').textContent=L.t.priceAny; return; }
   $('#priceVal').textContent='≤ '+'$'.repeat(v)+' · '+L.priceAmt[v];
 }
+function updateRevLabel(){ $('#revVal').textContent='≥ '+(+$('#minReviews').value).toLocaleString('en-US'); }
+function updateRatLabel(){ $('#ratVal').textContent='≥ '+(+$('#minRating').value).toFixed(1); }
 const PRICE_RANK={PRICE_LEVEL_FREE:1,PRICE_LEVEL_INEXPENSIVE:1,PRICE_LEVEL_MODERATE:2,PRICE_LEVEL_EXPENSIVE:3,PRICE_LEVEL_VERY_EXPENSIVE:4};
 function priceRank(pl){ return pl?(PRICE_RANK[pl]||null):null; }
 function hoursInfo(p){
@@ -618,7 +620,7 @@ function useMyLocation(){
 
 /* ============== search (Venue × Food cross-filter) ============== */
 async function runSearch(){
-  const radius=+$('#radius').value, minRev=+$('#minReviews').value||0, minRat=+$('#minRating').value||0;
+  const radius=+$('#radius').value;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
 
@@ -648,7 +650,7 @@ async function runSearch(){
   }
 
   let results=[...seen.values()]
-    .filter(p=>p.rating!=null&&p.userRatingCount!=null&&p.rating>=minRat&&p.userRatingCount>=minRev&&(p.businessStatus==null||p.businessStatus==='OPERATIONAL'));
+    .filter(p=>p.rating!=null&&p.userRatingCount!=null&&(p.businessStatus==null||p.businessStatus==='OPERATIONAL'));
   // cross filter: searched by cuisine, narrow to chosen venue format
   if(!foodAny && !venueAny){
     const vset=new Set(venue.types);
@@ -659,8 +661,9 @@ async function runSearch(){
 }
 
 function render(results){
-  const pmax=+$('#price').value;
-  const list = pmax<4 ? results.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; }) : results;
+  const minRev=+$('#minReviews').value||0, minRat=+$('#minRating').value||0, pmax=+$('#price').value;
+  let list=results.filter(r=>r.p.rating>=minRat && r.p.userRatingCount>=minRev);
+  if(pmax<4) list=list.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; });
   if(!list.length){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
     $('#count').textContent=`${currentLabel()} · 0${L.t.doneUnit}`; clearMarkers(); return;
