@@ -79,12 +79,12 @@
   .chip.onv{background:var(--herb);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(94,140,74,.3)}
   .chip.onf{background:var(--flame);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(232,85,42,.3)}
 
-  .smartbar{display:flex;gap:12px;align-items:center;padding:16px 24px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,var(--warm))}
-  .smartbar .lbl{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon);font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .smartbar{display:flex;gap:10px;align-items:center;padding:13px 24px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--paper),var(--warm))}
+  .smartbar .lbl{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon);font-size:14px;white-space:nowrap;display:flex;align-items:center;gap:6px}
   .smartbar .spark{animation:twinkle 2.2s ease-in-out infinite}
   @keyframes twinkle{0%,100%{opacity:.45;transform:scale(.9)}50%{opacity:1;transform:scale(1.18)}}
-  .smartbar input{flex:1;min-width:0;padding:11px 14px;font-size:15px}
-  .smartbar button{white-space:nowrap;padding:11px 24px;font-size:15px}
+  .smartbar input{flex:1;min-width:0}
+  .smartbar button{white-space:nowrap;padding:10px 22px}
   .why{margin-top:8px;font-size:12.5px;color:var(--herb-dark);line-height:1.55;background:rgba(94,140,74,.09);border-left:3px solid var(--herb);padding:6px 11px;border-radius:0 8px 8px 0}
   .why .sp{color:var(--persimmon);font-weight:700;margin-right:5px}
   main{flex:1;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(330px,1fr);min-height:0}
@@ -190,6 +190,24 @@
 </div>
 
 <div id="app" class="hidden" style="display:flex;flex-direction:column;flex:1;min-height:0">
+  <div class="controls">
+    <div class="field">
+      <label id="centerLabel"></label>
+      <div class="seg"><button class="ghost" id="locBtn"></button><button class="ghost" id="pinBtn"></button></div>
+    </div>
+    <div class="field"><label id="goLabel"></label><input type="text" id="goInput" style="width:170px" autocomplete="off"></div>
+    <div class="field"><label id="nameLabel"></label><input type="text" id="nameInput" style="width:170px" autocomplete="off"></div>
+    <div class="field">
+      <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
+      <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
+    </div>
+    <div class="field"><label><span id="minRevLabel"></span> <span class="val" id="revVal"></span></label><input type="range" id="minReviews" min="0" max="1000" step="50" value="300" style="width:130px"></div>
+    <div class="field"><label><span id="minRatLabel"></span> <span class="val" id="ratVal"></span></label><input type="range" id="minRating" min="3" max="5" step="0.1" value="4.0" style="width:120px"></div>
+    <div class="field"><label><span id="priceLabel"></span> <span class="val" id="priceVal"></span></label><input type="range" id="price" min="1" max="4" step="1" value="4" style="width:130px"></div>
+    <div class="field grow"></div>
+    <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
+  </div>
+
   <div class="smartbar">
     <span class="lbl"><span class="spark">✦</span> <span id="aiLbl"></span></span>
     <input type="text" id="aiInput" autocomplete="off">
@@ -203,24 +221,6 @@
   <div class="catbar bot">
     <span class="catlabel f" id="foodlabel"></span>
     <div class="chips" id="foodChips"></div>
-  </div>
-
-  <div class="controls">
-    <div class="field"><label><span id="minRevLabel"></span> <span class="val" id="revVal"></span></label><input type="range" id="minReviews" min="0" max="1000" step="50" value="300" style="width:130px"></div>
-    <div class="field"><label><span id="minRatLabel"></span> <span class="val" id="ratVal"></span></label><input type="range" id="minRating" min="3" max="5" step="0.1" value="4.0" style="width:120px"></div>
-    <div class="field"><label><span id="priceLabel"></span> <span class="val" id="priceVal"></span></label><input type="range" id="price" min="1" max="4" step="1" value="4" style="width:130px"></div>
-    <div class="field">
-      <label><span id="radiusLabel"></span> <span class="val" id="radVal"></span></label>
-      <input type="range" id="radius" min="500" max="5000" step="100" value="2000">
-    </div>
-    <div class="field">
-      <label id="centerLabel"></label>
-      <div class="seg"><button class="ghost" id="locBtn"></button><button class="ghost" id="pinBtn"></button></div>
-    </div>
-    <div class="field"><label id="goLabel"></label><input type="text" id="goInput" style="width:170px" autocomplete="off"></div>
-    <div class="field"><label id="nameLabel"></label><input type="text" id="nameInput" style="width:170px" autocomplete="off"></div>
-    <div class="field grow"></div>
-    <div class="field"><label>&nbsp;</label><button class="searchbtn" id="searchBtn"></button></div>
   </div>
 
   <main>
@@ -463,7 +463,6 @@ let region='tw', L=LOCALES.tw;
 let map, centerMarker, searchCircle, searchCenter;
 let resultMarkers=[], lastResults=[];
 let sortMode=localStorage.getItem('ff_sort')||'rating';
-let userSorted=false;
 let selectedCat='all', selectedFood='all';
 let pinMode=false, userLocated=false;
 let mode='cat', nameQuery='';
@@ -587,7 +586,6 @@ async function initApp(){
     if(b.dataset.sort===sortMode){ document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); }
     b.addEventListener('click',()=>{
       sortMode=b.dataset.sort; localStorage.setItem('ff_sort',sortMode);
-      userSorted=true;
       document.querySelectorAll('.sort button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
       if(lastResults.length) rerender();
     });
@@ -685,7 +683,7 @@ function useMyLocation(){
 
 /* ============== search (Venue × Food cross-filter) ============== */
 async function runSearch(){
-  mode='cat'; userSorted=false;
+  mode='cat';
   const radius=+$('#radius').value;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
@@ -728,7 +726,7 @@ async function runSearch(){
 
 async function runTextSearch(q){
   if(!q) return;
-  mode='name'; nameQuery=q; userSorted=false;
+  mode='name'; nameQuery=q;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.loading)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
   const { Place } = await google.maps.importLibrary("places");
@@ -754,7 +752,7 @@ function nameSearch(){ runTextSearch($('#nameInput').value.trim()); }
 
 async function describeSearch(){
   const q=$('#aiInput').value.trim(); if(!q) return;
-  mode='name'; nameQuery=q; userSorted=false;
+  mode='name'; nameQuery=q;
   $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.aiThinking)}</div>`;
   $('#count').textContent=L.t.searching; clearMarkers();
   const { Place } = await google.maps.importLibrary("places");
@@ -803,11 +801,6 @@ async function describeSearch(){
 }
 
 function rerender(){ if(lastResults.length) render(lastResults, mode==='name'); }
-function syncSortButtons(){
-  const btns=document.querySelectorAll('.sort button');
-  if(mode==='name' && !userSorted){ btns.forEach(x=>x.classList.remove('on')); return; }
-  btns.forEach(x=>x.classList.toggle('on', x.dataset.sort===sortMode));
-}
 function bumpCount(){ const c=$('#count'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
 
 function render(results, bypass){
@@ -823,14 +816,12 @@ function render(results, bypass){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
     $('#count').textContent=`${label} · 0${L.t.doneUnit}`; bumpCount(); clearMarkers(); return;
   }
-  const sorted = (bypass && !userSorted) ? list : [...list].sort((a,b)=>{
+  const sorted = bypass ? list : [...list].sort((a,b)=>{
     if(sortMode==='dist') return a.dist-b.dist;
-    if(sortMode==='reviews') return (b.p.userRatingCount||0)-(a.p.userRatingCount||0);
-    const rd=(b.p.rating||0)-(a.p.rating||0);
-    if(rd!==0) return rd;
-    return (b.p.userRatingCount||0)-(a.p.userRatingCount||0);
+    if(sortMode==='reviews') return b.p.userRatingCount-a.p.userRatingCount;
+    if(b.p.rating!==a.p.rating) return b.p.rating-a.p.rating;
+    return b.p.userRatingCount-a.p.userRatingCount;
   });
-  syncSortButtons();
   $('#count').textContent=`${label} · ${sorted.length}${L.t.doneUnit}`; bumpCount();
   drawMarkers(sorted);
   $('#results').innerHTML=sorted.map((r,i)=>cardHTML(r,i+1)).join('');
