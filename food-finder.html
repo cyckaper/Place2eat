@@ -291,6 +291,7 @@ const LOCALES = {
       nameLabel:'店名搜尋', namePh:'例如：滇味小廚', noRating:'無評分',
       aiLbl:'描述配對', aiPh:'用一句話描述：口味、型式、環境、氣氛、地點… 例如「安靜有質感、適合約會的日式，大安區」', aiGo:'配對',
       aiThinking:'AI 配對中…正在分析你的描述',
+      diningAnchor:'餐廳 美食',
       radiusLabel:'搜尋半徑', minRev:'評論數 ≥', minRat:'評分 ≥', searchBtn:'搜尋此範圍',
       venueLabel:'店家', foodLabel:'食物', sRating:'評分', sPop:'人氣', sDist:'距離',
       priceLabel:'價位', priceAny:'不限',
@@ -359,6 +360,7 @@ const LOCALES = {
       nameLabel:'Search by name', namePh:'e.g. Joe’s Pizza', noRating:'No rating',
       aiLbl:'Describe & match', aiPh:'Describe it — cuisine, style, vibe, area… e.g. “quiet upscale Japanese, good for a date, downtown”', aiGo:'Match',
       aiThinking:'Matching with AI… analyzing your request',
+      diningAnchor:'restaurants food',
       radiusLabel:'Radius', minRev:'Reviews ≥', minRat:'Rating ≥', searchBtn:'Search this area',
       venueLabel:'Place', foodLabel:'Food', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
       priceLabel:'Price', priceAny:'Any',
@@ -426,6 +428,7 @@ const LOCALES = {
       nameLabel:'店名で検索', namePh:'例：一蘭', noRating:'評価なし',
       aiLbl:'説明でマッチ', aiPh:'一言で：料理・形式・雰囲気・エリア… 例「静かで上質、デート向きの和食、渋谷」', aiGo:'マッチ',
       aiThinking:'AI マッチング中…説明を分析しています',
+      diningAnchor:'レストラン グルメ',
       radiusLabel:'検索半径', minRev:'レビュー数 ≥', minRat:'評価 ≥', searchBtn:'この範囲を検索',
       venueLabel:'お店', foodLabel:'料理', sRating:'評価', sPop:'人気', sDist:'距離',
       priceLabel:'価格', priceAny:'指定なし',
@@ -790,7 +793,7 @@ async function describeSearch(){
   let cands=[];
   try{
     const { places } = await Place.searchByText({
-      textQuery:q,
+      textQuery:q+' '+L.t.diningAnchor,
       fields:['id','displayName','location','rating','userRatingCount','formattedAddress','googleMapsURI','primaryTypeDisplayName','types','priceLevel','businessStatus','regularOpeningHours','utcOffsetMinutes'],
       locationBias:{ center:searchCenter, radius },
       maxResultCount:20, language:L.apiLang,
