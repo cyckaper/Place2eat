@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Place2Eat</title>
+<title>報你吃 · TipEat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -199,7 +199,7 @@
 <body>
 
 <header>
-  <div class="brand"><h1 id="brand">Place2Eat</h1><p class="tagline" id="tagline"></p></div>
+  <div class="brand"><h1 id="brand">報你吃</h1><p class="tagline" id="tagline"></p></div>
   <div class="region" id="region">
     <button data-region="tw">台灣</button>
     <button data-region="us">US</button>
@@ -294,8 +294,8 @@ const LOCALES = {
     rad:{min:500,max:5000,step:100,def:2000}, fallback:{lat:25.0330,lng:121.5654},
     priceAmt:['','NT$200','NT$600','NT$1200'],
     t:{
-      brand:'口碑覓食',
-      tagline:'選地點、交叉「店家 × 食物」兩種分類，挖出評論多又高分的真口碑',
+      brand:'報你吃',
+      tagline:'說一句想吃的，AI 在附近報你一間對味的店',
       gateH2:'放入 Google Maps API 金鑰',
       gateP:'金鑰只存在這台裝置的瀏覽器，正式部署時建議設在 Netlify。',
       gateLi1:'啟用 Maps JavaScript API 與 Places API (New)',
@@ -371,8 +371,8 @@ const LOCALES = {
     radUnit:' mi', rad:{min:800,max:8000,step:200,def:3200}, fallback:{lat:40.7128,lng:-74.0060},
     priceAmt:['','$10','$25','$50'],
     t:{
-      brand:'Place2Eat',
-      tagline:'Cross “Place × Food” to surface spots with lots of reviews and high ratings',
+      brand:'TipEat',
+      tagline:'Describe a craving — AI tips you a great spot nearby',
       gateH2:'Add your Google Maps API key',
       gateP:'The key stays in this browser only. For production, set it in Netlify.',
       gateLi1:'Enable Maps JavaScript API and Places API (New)',
@@ -447,8 +447,8 @@ const LOCALES = {
     rad:{min:500,max:5000,step:100,def:2000}, fallback:{lat:35.6762,lng:139.6503},
     priceAmt:['','¥1,000','¥3,000','¥6,000'],
     t:{
-      brand:'クチコミ飯',
-      tagline:'「お店 × 料理」を掛け合わせて、レビューが多くて高評価のお店を探す',
+      brand:'おすすめ飯',
+      tagline:'食べたいを言えば、AI が近くのお店をおすすめ',
       gateH2:'Google Maps API キーを入力',
       gateP:'キーはこの端末のブラウザにのみ保存されます。本番では Netlify に設定してください。',
       gateLi1:'Maps JavaScript API と Places API (New) を有効化',
