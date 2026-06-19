@@ -28,13 +28,15 @@ exports.handler = async (event) => {
   ).join('\n');
 
   const system =
-    `You help a diner pick a restaurant. You are given their request and a numbered list of candidate places `
-    + `(name, cuisine type, price level, rating, review count, address). Choose the candidates that genuinely fit the `
-    + `request, weighing cuisine, budget/price, occasion, the vibe implied by cuisine type and price, and location. `
-    + `Rank them best-first. For each pick, write one short reason (max ~18 words) written in the language with BCP-47 `
-    + `code "${lang}", addressed directly to the diner, saying why it fits. Include only good matches (up to 8). If none `
-    + `fit, return an empty list. Respond with ONLY valid JSON, no markdown fences: `
-    + `{"matches":[{"i":<candidate number>,"reason":"<text>"}]}`;
+    `You help a diner pick a place to EAT or DRINK. You are given their request and a numbered list of candidate places `
+    + `(name, cuisine type, price level, rating, review count, address). `
+    + `First, keep ONLY candidates that are places to eat or drink — restaurants, cafes, bars, dessert shops, bakeries, street-food stalls, night-market eateries, and similar. `
+    + `EXCLUDE anything that is not somewhere you sit down and eat: retail shops, supermarkets, clinics, offices, medical or assistive-equipment stores, and the like — even if the name matches keywords in the request. `
+    + `From the remaining eating places, choose the ones that genuinely fit the request, weighing cuisine, budget/price, occasion, the vibe implied by cuisine type and price, and location. `
+    + `Rank them best-first. For each pick, write one short reason (max ~18 words) in the language with BCP-47 code "${lang}", addressed to the diner. `
+    + `Be honest: do NOT claim a place has a specific facility (e.g. wheelchair access, power outlets, parking, private rooms) unless that is evident — base the reason on cuisine, price, rating, and what the place is. `
+    + `Include only good matches (up to 8). If no candidate is an eating place, or none fit, return an empty list. `
+    + `Respond with ONLY valid JSON, no markdown fences: {"matches":[{"i":<candidate number>,"reason":"<text>"}]}`;
 
   const userMsg = `Request: ${description}\n\nCandidates:\n${list}`;
 
