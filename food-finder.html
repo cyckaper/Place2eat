@@ -482,6 +482,7 @@ let resultMarkers=[], lastResults=[];
 let sortMode=localStorage.getItem('ff_sort')||'rating';
 let userSorted=false;
 let scrollAfterRender=false;
+let viewFilters=true, viewKeepOrder=false, viewLabel='';
 let selectedCat='all', selectedFood='all';
 let pinMode=false, userLocated=false;
 let mode='cat', nameQuery='';
@@ -741,7 +742,14 @@ async function runSearch(){
     results=results.filter(p=>(p.types||[]).some(t=>vset.has(t)));
   }
   const mapped=results.map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
-  lastResults=mapped; render(mapped);
+  const desc=$('#aiInput').value.trim();
+  viewFilters=true; viewLabel=currentLabel();
+  if(desc && mapped.length){
+    $('#results').innerHTML=`<div class="loading"><div class="sizzle"><span></span><span></span><span></span></div>${esc(L.t.aiThinking)}</div>`;
+    const ranked=await aiRank(mapped, desc);
+    if(ranked){ viewKeepOrder=true; lastResults=ranked; render(ranked); return; }
+  }
+  viewKeepOrder=false; lastResults=mapped; render(mapped);
 }
 
 async function runTextSearch(q){
@@ -761,7 +769,8 @@ async function runTextSearch(q){
     });
     const mapped=(places||[]).filter(p=>p.location && p.businessStatus!=='CLOSED_PERMANENTLY')
       .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
-    lastResults=mapped; render(mapped, true);
+    viewFilters=false; viewKeepOrder=true; viewLabel='“'+(q.length>22?q.slice(0,22)+'…':q)+'”';
+    lastResults=mapped; render(mapped);
   }catch(e){
     console.error('text search error',e);
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
@@ -793,10 +802,17 @@ async function describeSearch(){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
     $('#count').textContent=L.t.errCount; return;
   }
-  if(!cands.length){ render([], true); return; }
-  // ask the AI function to rank + explain
+  viewFilters=false; viewLabel='“'+(q.length>22?q.slice(0,22)+'…':q)+'”';
+  if(!cands.length){ viewKeepOrder=false; render([]); return; }
+  const ranked=await aiRank(cands, q);
+  viewKeepOrder=true;
+  lastResults=ranked||cands; render(lastResults);
+}
+
+async function aiRank(cands, description){
+  // Returns cands reordered with .reason attached (AI matches), or null on failure / no match.
   try{
-    const payload={ description:q, lang:L.apiLang, places:cands.map((c,i)=>({
+    const payload={ description, lang:L.apiLang, places:cands.map((c,i)=>({
       i,
       name:(typeof c.p.displayName==='string'?c.p.displayName:(c.p.displayName?.text||'')),
       primaryType:typeName(c.p)||((c.p.types||[])[0]||''),
@@ -806,42 +822,37 @@ async function describeSearch(){
       address:c.p.formattedAddress||'',
     })) };
     const res=await fetch('/.netlify/functions/match',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-    if(res.ok){
-      const data=await res.json();
-      const matches=Array.isArray(data.matches)?data.matches:[];
-      if(matches.length){
-        const seen=new Set();
-        const ranked=matches.map(m=>{ if(seen.has(m.i)) return null; seen.add(m.i); const c=cands[m.i]; if(c) c.reason=m.reason; return c; }).filter(Boolean);
-        if(ranked.length){ lastResults=ranked; render(ranked, true); return; }
-      }
-    }
-  }catch(e){ console.error('ai match error',e); }
-  // fallback: plain relevance order (function not deployed / errored)
-  lastResults=cands; render(cands, true);
+    if(!res.ok) return null;
+    const data=await res.json();
+    const matches=Array.isArray(data.matches)?data.matches:[];
+    if(!matches.length) return null;
+    const seen=new Set();
+    const ranked=matches.map(m=>{ if(seen.has(m.i)) return null; seen.add(m.i); const c=cands[m.i]; if(c) c.reason=m.reason; return c; }).filter(Boolean);
+    return ranked.length?ranked:null;
+  }catch(e){ console.error('ai rank error',e); return null; }
 }
 
-function rerender(){ if(lastResults.length) render(lastResults, mode==='name'); }
+function rerender(){ if(lastResults.length) render(lastResults); }
 function syncSortButtons(){
   const btns=document.querySelectorAll('.sort button');
-  if(mode==='name' && !userSorted){ btns.forEach(x=>x.classList.remove('on')); return; }
+  if(viewKeepOrder && !userSorted){ btns.forEach(x=>x.classList.remove('on')); return; }
   btns.forEach(x=>x.classList.toggle('on', x.dataset.sort===sortMode));
 }
 function bumpCount(){ const c=$('#count'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); }
 
-function render(results, bypass){
+function render(results){
   let list;
-  if(bypass){ list=results; }
-  else{
+  if(viewFilters){
     const minRev=+$('#minReviews').value||0, minRat=+$('#minRating').value||0, pmax=+$('#price').value;
-    list=results.filter(r=>r.p.rating>=minRat && r.p.userRatingCount>=minRev);
+    list=results.filter(r=>(r.p.rating??0)>=minRat && (r.p.userRatingCount??0)>=minRev);
     if(pmax<4) list=list.filter(r=>{ const rk=priceRank(r.p.priceLevel); return rk==null||rk<=pmax; });
-  }
-  const label = bypass ? ('“'+(nameQuery.length>22?nameQuery.slice(0,22)+'…':nameQuery)+'”') : currentLabel();
+  } else { list=results; }
+  const label = viewLabel || currentLabel();
   if(!list.length){
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.noResBig)}</span>${esc(L.t.noResText)}</div>`;
     $('#count').textContent=`${label} · 0${L.t.doneUnit}`; bumpCount(); clearMarkers(); return;
   }
-  const sorted = (bypass && !userSorted) ? list : [...list].sort((a,b)=>{
+  const sorted = (viewKeepOrder && !userSorted) ? list : [...list].sort((a,b)=>{
     if(sortMode==='dist') return a.dist-b.dist;
     if(sortMode==='reviews') return (b.p.userRatingCount||0)-(a.p.userRatingCount||0);
     const rd=(b.p.rating||0)-(a.p.rating||0);
