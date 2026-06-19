@@ -799,7 +799,8 @@ async function describeSearch(){
       maxResultCount:20, language:L.apiLang,
     });
     cands=(places||[]).filter(p=>p.location && p.businessStatus!=='CLOSED_PERMANENTLY')
-      .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }));
+      .map(p=>({ p, dist:spherical.computeDistanceBetween(searchCenter,p.location) }))
+      .filter(c=>c.dist<=radius);
   }catch(e){
     console.error('candidate search error',e);
     $('#results').innerHTML=`<div class="empty"><span class="big">${esc(L.t.failBig)}</span>${esc(L.t.failText)}</div>`;
