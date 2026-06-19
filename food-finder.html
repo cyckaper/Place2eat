@@ -59,6 +59,16 @@
   button.ghost.on{background:var(--persimmon);color:#fff;border-color:var(--persimmon)}
 
   .controls{display:flex;gap:16px 26px;flex-wrap:wrap;align-items:flex-end;padding:13px 24px 11px;border-bottom:1px solid var(--line);background:var(--paper)}
+  .howto{border-bottom:1px solid var(--line);background:var(--warm)}
+  .howto>summary{cursor:pointer;list-style:none;padding:9px 24px;font-size:13px;font-weight:600;color:var(--persimmon);display:flex;align-items:center;gap:8px;user-select:none;-webkit-user-select:none}
+  .howto>summary::-webkit-details-marker{display:none}
+  .howto>summary::before{content:"";width:15px;height:15px;flex:none;border-radius:50%;border:1.5px solid var(--persimmon);background:radial-gradient(circle at 50% 32%,var(--persimmon) 0 1.2px,transparent 1.6px),radial-gradient(circle at 50% 62%,var(--persimmon) 0 1.6px,transparent 2px)}
+  .howto>summary::after{content:"▾";margin-left:auto;font-size:12px;transition:transform .2s;color:var(--ink-soft)}
+  .howto[open]>summary::after{transform:rotate(180deg)}
+  .howto-body{padding:2px 24px 15px;font-size:13px;line-height:1.7;color:var(--ink-soft)}
+  .howto-body b{color:var(--ink);font-weight:600}
+  .howto-body ol{margin:4px 0 0;padding-left:20px}
+  .howto-body li{margin:6px 0}
   .field{display:flex;flex-direction:column;gap:5px}
   .field label{font-size:11.5px;letter-spacing:.04em;color:var(--ink-soft);text-transform:uppercase;font-family:"Fraunces",serif;font-weight:600}
   .field .val{font-family:"Fraunces",serif;font-weight:700;color:var(--persimmon)}
@@ -171,6 +181,8 @@
     h1{font-size:24px}
     input[type=range]{width:120px}
     .controls{gap:10px 16px;padding:11px 16px}
+    .howto>summary{padding:9px 16px}
+    .howto-body{padding:2px 16px 14px}
     .field label{font-size:10.5px}
     .smartbar{padding:11px 16px;gap:8px}
     .smartbar .lbl{font-size:13px}
@@ -204,6 +216,10 @@
 </div>
 
 <div id="app" class="hidden">
+  <details class="howto">
+    <summary id="howtoSummary"></summary>
+    <div class="howto-body" id="howtoBody"></div>
+  </details>
   <div class="controls">
     <div class="field">
       <label id="centerLabel"></label>
@@ -292,6 +308,14 @@ const LOCALES = {
       aiLbl:'描述配對', aiPh:'用一句話描述：口味、型式、環境、氣氛、地點… 例如「安靜有質感、適合約會的日式，大安區」', aiGo:'配對',
       aiThinking:'AI 配對中…正在分析你的描述',
       diningAnchor:'餐廳 美食',
+      howtoTitle:'搜尋邏輯說明 — 各選項的優先順序',
+      helpHtml:'<ol>'
+        +'<li><b>先設範圍</b>:用「我的位置」或「前往地點」定中心,「搜尋半徑」定範圍。<b>所有搜尋都只在這個範圍內進行</b>。</li>'
+        +'<li><b>三種找法</b>:<b>描述配對</b>(用一句話描述想要的料理／氛圍／場合／價位,AI 從範圍內的餐廳挑最符合的、排序並附理由)、<b>店家 × 食物 分類</b>(選類別列出範圍內高評論的熱門店)、<b>店名搜尋</b>(已知店名直接找那家店,不受半徑限制)。</li>'
+        +'<li><b>描述 + 分類會疊加</b>:描述框有文字時再點分類,會用你的描述對「那個分類」的結果做 AI 配對排序;描述會留著、持續套用,<b>清空描述框</b>才回到純分類搜尋。</li>'
+        +'<li><b>篩選門檻</b>:評論數／評分／價位會即時篩選結果——<b>分類與疊加結果適用</b>;純描述與店名搜尋不套門檻(那是語意／指名搜尋)。</li>'
+        +'<li><b>排序</b>:AI／描述的結果預設用「推薦順序」,按 評分／人氣／距離 可重新排序。</li>'
+        +'</ol>',
       radiusLabel:'搜尋半徑', minRev:'評論數 ≥', minRat:'評分 ≥', searchBtn:'搜尋此範圍',
       venueLabel:'店家', foodLabel:'食物', sRating:'評分', sPop:'人氣', sDist:'距離',
       priceLabel:'價位', priceAny:'不限',
@@ -361,6 +385,14 @@ const LOCALES = {
       aiLbl:'Describe & match', aiPh:'Describe it — cuisine, style, vibe, area… e.g. “quiet upscale Japanese, good for a date, downtown”', aiGo:'Match',
       aiThinking:'Matching with AI… analyzing your request',
       diningAnchor:'restaurants food',
+      howtoTitle:'How search works — the order of options',
+      helpHtml:'<ol>'
+        +'<li><b>Set the area first.</b> Pick a center with "My location" or "Go to place", and a "Search radius". <b>Every search stays inside this area.</b></li>'
+        +'<li><b>Three ways to search:</b> <b>Describe &amp; match</b> (describe the cuisine / vibe / occasion / price in a sentence; AI picks the best fits nearby, ranks them, and adds reasons), <b>Venue × Food categories</b> (pick categories to list popular, well-reviewed spots in range), and <b>Search by name</b> (find a specific place — not limited by the radius).</li>'
+        +'<li><b>Describe + category stack.</b> With text in the describe box, tapping a category re-ranks that category\'s results by your description. The description keeps applying until you <b>clear the box</b>.</li>'
+        +'<li><b>Filter thresholds:</b> reviews / rating / price filter the results live — <b>applied to category &amp; stacked results</b>; name and pure-describe searches ignore them (those are semantic / by-name searches).</li>'
+        +'<li><b>Sorting:</b> AI / describe results use a recommended order by default; tap Rating / Popularity / Distance to re-sort.</li>'
+        +'</ol>',
       radiusLabel:'Radius', minRev:'Reviews ≥', minRat:'Rating ≥', searchBtn:'Search this area',
       venueLabel:'Place', foodLabel:'Food', sRating:'Rating', sPop:'Popularity', sDist:'Distance',
       priceLabel:'Price', priceAny:'Any',
@@ -429,6 +461,14 @@ const LOCALES = {
       aiLbl:'説明でマッチ', aiPh:'一言で：料理・形式・雰囲気・エリア… 例「静かで上質、デート向きの和食、渋谷」', aiGo:'マッチ',
       aiThinking:'AI マッチング中…説明を分析しています',
       diningAnchor:'レストラン グルメ',
+      howtoTitle:'検索のしくみ — 各項目の優先順位',
+      helpHtml:'<ol>'
+        +'<li><b>まず範囲を設定</b>:「現在地」または「場所へ移動」で中心を、「検索半径」で範囲を決めます。<b>すべての検索はこの範囲内で行われます</b>。</li>'
+        +'<li><b>3つの探し方</b>:<b>説明でマッチ</b>(料理／雰囲気／シーン／価格を一言で説明すると、AI が範囲内の店から最適なものを選び、並べ替えて理由を付けます)、<b>店舗 × 料理カテゴリ</b>(カテゴリを選んで範囲内の高評価の人気店を表示)、<b>店名で検索</b>(店名から直接探す。半径の制限を受けません)。</li>'
+        +'<li><b>説明 + カテゴリは重ねられます</b>:説明欄に文字があるときカテゴリを選ぶと、その説明でそのカテゴリの結果を AI が並べ替えます。説明は<b>欄をクリアする</b>までずっと適用されます。</li>'
+        +'<li><b>絞り込み</b>:レビュー数／評価／価格で結果をリアルタイムに絞り込み——<b>カテゴリと重ね結果に適用</b>。店名検索と純粋な説明検索では無視されます(意味／店名による検索のため)。</li>'
+        +'<li><b>並べ替え</b>:AI／説明の結果は既定で「おすすめ順」。評価／人気／距離で並べ替え可能。</li>'
+        +'</ol>',
       radiusLabel:'検索半径', minRev:'レビュー数 ≥', minRat:'評価 ≥', searchBtn:'この範囲を検索',
       venueLabel:'お店', foodLabel:'料理', sRating:'評価', sPop:'人気', sDist:'距離',
       priceLabel:'価格', priceAny:'指定なし',
@@ -506,6 +546,7 @@ function applyLocale(){
   document.documentElement.lang=L.lang;
   document.title=t.brand;
   $('#brand').textContent=t.brand; $('#tagline').textContent=t.tagline;
+  $('#howtoSummary').textContent=t.howtoTitle; $('#howtoBody').innerHTML=t.helpHtml;
   $('#gateH2').textContent=t.gateH2; $('#gateP').textContent=t.gateP;
   $('#gateLi1').textContent=t.gateLi1; $('#gateLi2').textContent=t.gateLi2;
   $('#keyInput').placeholder=t.keyPh; $('#keyGo').textContent=t.keyGo;
