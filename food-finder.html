@@ -168,6 +168,8 @@
   .searchbtn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 3.8s ease-in-out infinite}
   .chip:active{transform:scale(.94)}
   .note{font-size:12px;color:var(--ink-soft);padding:11px 20px;border-top:1px solid var(--line);background:var(--paper);line-height:1.6}
+  .copyright{font-size:11px;color:var(--ink-soft);padding:10px 20px 14px;border-top:1px solid var(--line);background:var(--paper);line-height:1.65;text-align:center}
+  .copyright .copy-sub{display:inline-block;margin-top:2px;color:#9c8b7b;font-size:10.5px}
   .hidden{display:none!important}
   .err{color:var(--chili);font-size:13px;margin-top:10px}
 
@@ -269,6 +271,7 @@
       </div>
       <div class="results" id="results"></div>
       <div class="note" id="note"></div>
+      <div class="copyright" id="copyright"></div>
     </div>
   </main>
 </div>
@@ -325,6 +328,7 @@ const LOCALES = {
       initText:'兩排可以單選或交叉。只端出評論數與評分同時達標的店——人多、分高，被刷單灌水的機率自然低很多。',
       noResBig:'這個組合沒有達標的店', noResText:'放寬其中一排到「全部」，或放大半徑、調低「評論數 ≥」再試。',
       note:'店家×食物交叉：以食物類別搜尋、再用店家型態交集過濾（高評論數的熱門店優先）。每次查詢上限 20 筆，密集區可縮小半徑。',
+      copyright:'© 2026 報你吃 TipEat　·　保留所有權利<br><span class="copy-sub">地圖與店家資訊由 Google 提供，內容可能變動或有誤；AI 配對結果僅供參考，請以店家現場資訊為準。</span>',
       loading:'搜尋中…比對評論數與評分', failBig:'查詢失敗',
       failText:'請確認金鑰已啟用 Places API (New)，且未被網域限制擋下。',
       searching:'搜尋中…', errCount:'錯誤', doneUnit:' 間達標', reviews:' 則評論',
@@ -402,6 +406,7 @@ const LOCALES = {
       initText:'Use either row alone or cross them. Only places that clear both the review-count and rating bars show up — busy and well-rated, so they are hard to fake.',
       noResBig:'Nothing clears the bar', noResText:'Set one row to “All”, or widen the radius / lower “Reviews ≥” and try again.',
       note:'Place × Food cross: searches by cuisine, then keeps results whose type matches the place format (heavily-reviewed first). Each query returns up to 20.',
+      copyright:'© 2026 TipEat　·　All rights reserved<br><span class="copy-sub">Map and place data provided by Google; details may change or be inaccurate. AI suggestions are for reference only — please confirm with the venue.</span>',
       loading:'Searching… matching reviews and ratings', failBig:'Search failed',
       failText:'Make sure the key has Places API (New) enabled and is not blocked by domain restrictions.',
       searching:'Searching…', errCount:'Error', doneUnit:' places', reviews:' reviews',
@@ -478,6 +483,7 @@ const LOCALES = {
       initText:'2 列は単独でも掛け合わせでも使えます。レビュー数と評価の両方を満たすお店だけを表示——多くの人が訪れて高評価なので、サクラの可能性は低くなります。',
       noResBig:'この組み合わせは該当なし', noResText:'どちらかを「すべて」にするか、半径を広げる・「レビュー数 ≥」を下げて再検索してください。',
       note:'お店×料理：料理で検索し、お店の業態に一致するものを残します（レビュー数の多い店を優先）。1 回の検索は最大 20 件。',
+      copyright:'© 2026 おすすめ飯 TipEat　·　無断複製・転載を禁じます<br><span class="copy-sub">地図・店舗情報は Google 提供。内容は変更・誤りの可能性があります。AI のおすすめは参考用です。最新情報は店舗にてご確認ください。</span>',
       loading:'検索中…レビュー数と評価を照合', failBig:'検索に失敗しました',
       failText:'キーで Places API (New) が有効で、ドメイン制限に阻まれていないか確認してください。',
       searching:'検索中…', errCount:'エラー', doneUnit:' 件', reviews:' 件のレビュー',
@@ -562,6 +568,7 @@ function applyLocale(){
   $('#venuelabel').textContent=t.venueLabel; $('#foodlabel').textContent=t.foodLabel;
   $('#sRating').textContent=t.sRating; $('#sPop').textContent=t.sPop; $('#sDist').textContent=t.sDist;
   $('#note').textContent=t.note;
+  $('#copyright').innerHTML=t.copyright;
   document.querySelectorAll('.region button').forEach(b=>b.classList.toggle('on',b.dataset.region===region));
   const r=L.rad, el=$('#radius'); el.min=r.min; el.max=r.max; el.step=r.step;
   if(+el.value<r.min||+el.value>r.max) el.value=r.def;
