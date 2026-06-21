@@ -707,7 +707,7 @@ function hoursInfo(p){
   if(!oh||!oh.periods||!oh.periods.length) return null;
   const periods=oh.periods;
   const off=(typeof p.utcOffsetMinutes==='number')?p.utcOffsetMinutes:(-new Date().getTimezoneOffset());
-  const placeNow=new Date(Date.now()+(new Date().getTimezoneOffset()*60000)+off*60000); // wall time at the place
+  const placeNow=new Date(Date.now()+off*60000); // shift UTC by the venue's offset; read via getUTC* below to get the venue's wall-clock time
   const day=placeNow.getUTCDay();
   const cur=day*1440+placeNow.getUTCHours()*60+placeNow.getUTCMinutes();
   const pad=n=>String(n).padStart(2,'0');
