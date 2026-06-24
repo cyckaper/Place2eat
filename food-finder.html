@@ -6,7 +6,7 @@
 <title>報你吃 · TipEat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Serif+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --cream:#fbf4e9; --paper:#fffaf2; --warm:#fdeede;
@@ -19,8 +19,14 @@
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
   body{
-    font-family:"Noto Serif TC","Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);
+    font-family:"Noto Serif TC","Noto Serif Thai","Hiragino Mincho ProN","Yu Mincho",serif;color:var(--ink);background:var(--cream);
     display:flex;flex-direction:column;min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  /* Thai has no Fraunces glyphs — use a Thai serif for the Fraunces-styled bits when in Thai mode */
+  html[lang="th"] h1, html[lang="th"] .gate h2, html[lang="th"] .field label, html[lang="th"] .field .val,
+  html[lang="th"] .catlabel, html[lang="th"] .smartbar .lbl, html[lang="th"] .count, html[lang="th"] .rank,
+  html[lang="th"] .stars, html[lang="th"] .empty .big, html[lang="th"] .pin span{
+    font-family:"Noto Serif Thai","Noto Serif TC",serif;
   }
   header{
     padding:18px 24px;color:#fff;position:relative;overflow:hidden;
@@ -206,6 +212,7 @@
     <button data-region="tw">台灣</button>
     <button data-region="us">US</button>
     <button data-region="jp">日本</button>
+    <button data-region="th">ไทย</button>
   </div>
 </header>
 
@@ -521,6 +528,81 @@ const LOCALES = {
       {id:'seaf',  zh:'海鮮',     types:['seafood_restaurant']},
       {id:'sweets',zh:'スイーツ', types:['dessert_shop','ice_cream_shop','cake_shop']},
       {id:'coffee',zh:'コーヒー', types:['cafe','coffee_shop']},
+    ],
+  },
+  th:{
+    name:'ไทย', lang:'th', apiLang:'th', unit:'km',
+    radUnit:' กม.', nearSuffix:' ม.', farSuffix:' กม.',
+    rad:{min:500,max:5000,step:100,def:2000}, fallback:{lat:13.7455,lng:100.5350},
+    priceAmt:['','฿150','฿400','฿1,000'],
+    t:{
+      brand:'บอกร้านให้',
+      tagline:'บอกสิ่งที่อยากกิน เดี๋ยว AI หาร้านถูกปากใกล้ ๆ ให้',
+      gateH2:'ใส่ Google Maps API Key',
+      gateP:'คีย์จะถูกเก็บไว้ในเบราว์เซอร์ของอุปกรณ์นี้เท่านั้น เมื่อใช้งานจริงแนะนำให้ตั้งค่าใน Netlify',
+      gateLi1:'เปิดใช้งาน Maps JavaScript API และ Places API (New)',
+      gateLi2:'จำกัดคีย์ไว้กับโดเมนของคุณด้วย HTTP referrer',
+      keyPh:'วาง API Key ที่นี่…', keyGo:'เริ่ม',
+      errEmpty:'กรุณาวางคีย์ก่อน', errLoad:'โหลดแผนที่ไม่สำเร็จ ตรวจสอบคีย์และ API ที่เปิดใช้งาน',
+      centerLabel:'จุดศูนย์กลางการค้นหา', myLoc:'ตำแหน่งของฉัน', locating:'กำลังหาตำแหน่ง…', pickMap:'เลือกบนแผนที่',
+      goLabel:'ไปยังสถานที่', goPh:'เช่น สยาม',
+      nameLabel:'ค้นหาด้วยชื่อร้าน', namePh:'เช่น ส้มตำนัว', noRating:'ไม่มีคะแนน',
+      aiLbl:'อธิบาย & จับคู่', aiPh:'อธิบายสั้น ๆ: รสชาติ ประเภท บรรยากาศ ทำเล… เช่น "ร้านญี่ปุ่นเงียบ ๆ บรรยากาศดี เหมาะเดต ย่านสยาม"', aiGo:'จับคู่',
+      aiThinking:'AI กำลังจับคู่… กำลังวิเคราะห์คำอธิบายของคุณ',
+      diningAnchor:'ร้านอาหาร อาหาร',
+      howtoTitle:'วิธีการค้นหา — ลำดับของแต่ละตัวเลือก',
+      helpHtml:'<ol>'
+        +'<li><b>ตั้งขอบเขตก่อน</b>: ใช้ "ตำแหน่งของฉัน" หรือ "ไปยังสถานที่" กำหนดจุดศูนย์กลาง และ "รัศมีการค้นหา" กำหนดขอบเขต <b>ทุกการค้นหาจะอยู่ในขอบเขตนี้เท่านั้น</b></li>'
+        +'<li><b>สามวิธีค้นหา</b>: <b>อธิบาย & จับคู่</b> (อธิบายอาหาร/บรรยากาศ/โอกาส/ราคาเป็นประโยค AI จะเลือกร้านที่ตรงที่สุดในขอบเขต จัดอันดับและให้เหตุผล), <b>ร้าน × อาหาร</b> (เลือกหมวดเพื่อแสดงร้านยอดนิยมที่รีวิวเยอะ), <b>ค้นหาด้วยชื่อร้าน</b> (หาร้านที่รู้ชื่ออยู่แล้ว ไม่จำกัดด้วยรัศมี)</li>'
+        +'<li><b>อธิบาย + หมวด ใช้ร่วมกันได้</b>: เมื่อมีข้อความในช่องอธิบายแล้วเลือกหมวด AI จะจัดอันดับผลของหมวดนั้นตามคำอธิบายของคุณ คำอธิบายจะใช้ต่อเนื่องจน<b>ลบข้อความออก</b></li>'
+        +'<li><b>ตัวกรอง</b>: จำนวนรีวิว / คะแนน / ราคา จะกรองผลทันที — <b>ใช้กับผลของหมวดและแบบใช้ร่วม</b> ส่วนการค้นหาด้วยชื่อและการอธิบายล้วน ๆ จะไม่ใช้เกณฑ์เหล่านี้</li>'
+        +'<li><b>การจัดเรียง</b>: ผลของ AI / การอธิบาย ใช้ "ลำดับแนะนำ" เป็นค่าเริ่มต้น แตะ คะแนน / ความนิยม / ระยะทาง เพื่อจัดเรียงใหม่</li>'
+        +'</ol>',
+      radiusLabel:'รัศมีการค้นหา', minRev:'รีวิว ≥', minRat:'คะแนน ≥', searchBtn:'ค้นหาในพื้นที่นี้',
+      venueLabel:'ร้าน', foodLabel:'อาหาร', sRating:'คะแนน', sPop:'ความนิยม', sDist:'ระยะทาง',
+      priceLabel:'ราคา', priceAny:'ไม่จำกัด',
+      hrOpen:'เปิดอยู่', hrClosed:'ปิดอยู่', hrClosedToday:'วันนี้ปิด',
+      initCount:'เลือกร้านหรืออาหารเพื่อเริ่ม',
+      initBig:'ตั้งจุดศูนย์กลาง แล้วเลือก',
+      initText:'สองแถวใช้แยกหรือไขว้กันก็ได้ แสดงเฉพาะร้านที่ผ่านทั้งจำนวนรีวิวและคะแนน — คนเยอะและคะแนนสูง โอกาสปั่นรีวิวจึงน้อยกว่ามาก',
+      noResBig:'ชุดเงื่อนไขนี้ไม่มีร้านที่ผ่านเกณฑ์', noResText:'ลองตั้งแถวใดแถวหนึ่งเป็น "ทั้งหมด" หรือขยายรัศมี / ลด "รีวิว ≥" แล้วลองใหม่',
+      note:'ร้าน × อาหาร: ค้นหาตามประเภทอาหาร แล้วกรองด้วยประเภทร้าน (ร้านยอดนิยมที่รีวิวเยอะมาก่อน) แต่ละครั้งแสดงสูงสุด 20 รายการ ย่านที่หนาแน่นลองลดรัศมี',
+      copyright:'© 2026 บอกร้านให้ TipEat　·　สงวนลิขสิทธิ์<br><span class="copy-sub">ข้อมูลแผนที่และร้านค้าให้บริการโดย Google อาจมีการเปลี่ยนแปลงหรือคลาดเคลื่อน ผลการจับคู่ของ AI เป็นเพียงข้อมูลอ้างอิง โปรดตรวจสอบกับร้านอีกครั้ง</span>',
+      loading:'กำลังค้นหา… กำลังเทียบรีวิวและคะแนน', failBig:'ค้นหาไม่สำเร็จ',
+      failText:'ตรวจสอบว่าคีย์เปิดใช้ Places API (New) แล้ว และไม่ถูกบล็อกด้วยข้อจำกัดโดเมน',
+      searching:'กำลังค้นหา…', errCount:'ผิดพลาด', doneUnit:' ร้านที่ผ่านเกณฑ์', reviews:' รีวิว',
+      mustEat:'ต้องลอง', openMap:'เปิดใน Google Maps ↗',
+      alertNoGeo:'อุปกรณ์นี้ไม่รองรับการระบุตำแหน่ง', alertGeoFail:'ไม่สามารถระบุตำแหน่งได้ กรุณาใช้ "เลือกบนแผนที่" แทน',
+    },
+    cats:[
+      {id:'all',    zh:'ทั้งหมด',        types:['restaurant','meal_takeaway','cafe','bakery','bar']},
+      {id:'rest',   zh:'ร้านอาหาร',      types:['restaurant']},
+      {id:'street', zh:'สตรีทฟู้ด',      types:['meal_takeaway','food_court','snack_bar']},
+      {id:'noodle', zh:'ร้านก๋วยเตี๋ยว',  types:['noodle_shop','soup_restaurant']},
+      {id:'cafe',   zh:'คาเฟ่',          types:['cafe','coffee_shop','coffee_stand']},
+      {id:'grill',  zh:'ปิ้งย่าง/ชาบู',   types:['barbecue_restaurant','hot_pot_restaurant','yakiniku_restaurant']},
+      {id:'dessert',zh:'ร้านขนม',        types:['dessert_shop','ice_cream_shop','confectionery']},
+      {id:'bake',   zh:'เบเกอรี่',        types:['bakery','cake_shop','pastry_shop','donut_shop']},
+      {id:'bar',    zh:'บาร์',           types:['bar','pub','wine_bar','cocktail_bar','beer_garden']},
+      {id:'fast',   zh:'ฟาสต์ฟู้ด',       types:['fast_food_restaurant','hamburger_restaurant']},
+      {id:'cvs',    zh:'ร้านสะดวกซื้อ',    types:['convenience_store']},
+      {id:'mkt',    zh:'ซูเปอร์มาร์เก็ต',  types:['supermarket','grocery_store','asian_grocery_store']},
+    ],
+    foods:[
+      {id:'all',   zh:'ทั้งหมด',       types:[]},
+      {id:'thai',  zh:'อาหารไทย',      types:['thai_restaurant']},
+      {id:'noodle',zh:'ก๋วยเตี๋ยว',     types:['noodle_shop']},
+      {id:'seaf',  zh:'อาหารทะเล',     types:['seafood_restaurant']},
+      {id:'grill', zh:'ปิ้งย่าง/หม้อไฟ', types:['barbecue_restaurant','hot_pot_restaurant']},
+      {id:'jpn',   zh:'อาหารญี่ปุ่น',    types:['japanese_restaurant','sushi_restaurant','ramen_restaurant']},
+      {id:'kor',   zh:'อาหารเกาหลี',    types:['korean_restaurant','korean_barbecue_restaurant']},
+      {id:'chin',  zh:'อาหารจีน',       types:['chinese_restaurant','dim_sum_restaurant']},
+      {id:'ind',   zh:'อาหารอินเดีย',    types:['indian_restaurant']},
+      {id:'ital',  zh:'อิตาเลียน/พิซซ่า', types:['italian_restaurant','pizza_restaurant']},
+      {id:'amer',  zh:'อเมริกัน',       types:['american_restaurant','hamburger_restaurant']},
+      {id:'veg',   zh:'มังสวิรัติ/เจ',    types:['vegetarian_restaurant','vegan_restaurant']},
+      {id:'dsrt',  zh:'ของหวาน',       types:['dessert_shop','ice_cream_shop','cake_shop']},
+      {id:'coffee',zh:'กาแฟ',          types:['cafe','coffee_shop']},
     ],
   },
 };
